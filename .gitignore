@@ -1,10 +1,2 @@
-# Rust
-/target/
-**/*.rs.bk
-
-# Direnv
-/.direnv
-
-# IDEs
-/.idea
-/.vscode
+pkg/
+*.tar.*
