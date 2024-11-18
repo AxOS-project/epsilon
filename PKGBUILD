@@ -15,5 +15,5 @@ build() {
 
 package() {
   cd "${srcdir}/"
-  install -Dm755 "target/release/${pkgname}" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm755 "target/release/epsi" "${pkgdir}/usr/bin/${pkgname}"
 }
