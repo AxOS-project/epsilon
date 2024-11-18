@@ -1,0 +1,139 @@
+use std::collections::{HashMap, HashSet};
+
+use aur_rpc::PackageInfo;
+use console::Alignment;
+use crossterm::style::Stylize;
+
+use crate::{
+    builder::pacman::PacmanQueryBuilder, fl, internal::dependencies::DependencyInformation,
+};
+
+use super::get_logger;
+
+pub async fn print_dependency_list(dependencies: &[DependencyInformation]) -> bool {
+    let (
+        mut deps_repo,
+        mut makedeps_repo,
+        mut checkdeps_repo,
+        deps_aur,
+        makedeps_aur,
+        checkdeps_aur,
+    ) = dependencies
+        .iter()
+        .map(|d| {
+            (
+                d.depends.repo.iter().collect(),
+                d.make_depends.repo.iter().collect(),
+                d.check_depends.repo.iter().collect(),
+                d.depends.aur.iter().collect(),
+                d.make_depends.aur.iter().collect(),
+                d.check_depends.aur.iter().collect(),
+            )
+        })
+        .fold(
+            (
+                Vec::new(),
+                Vec::new(),
+                Vec::new(),
+                Vec::new(),
+                Vec::new(),
+                Vec::new(),
+            ),
+            |mut acc, mut deps| {
+                acc.0.append(&mut deps.0);
+                acc.1.append(&mut deps.1);
+                acc.2.append(&mut deps.2);
+                acc.3.append(&mut deps.3);
+                acc.4.append(&mut deps.4);
+                acc.5.append(&mut deps.5);
+
+                acc
+            },
+        );
+    deps_repo.dedup();
+    makedeps_repo.dedup();
+    checkdeps_repo.dedup();
+
+    let mut empty = true;
+    if !deps_repo.is_empty() {
+        tracing::info!("{}", fl!("repo-dependencies"));
+        get_logger().print_list(&deps_repo, "  ", 2);
+        empty = false;
+        get_logger().print_newline();
+    }
+    if !deps_aur.is_empty() {
+        tracing::info!("{}", fl!("aur-dependencies"));
+        print_aur_package_list(&deps_aur).await;
+        empty = false;
+        get_logger().print_newline();
+    }
+
+    if !makedeps_repo.is_empty() {
+        tracing::info!("{}", fl!("repo-make-dependencies"));
+        get_logger().print_list(&makedeps_repo, "  ", 2);
+        empty = false;
+        get_logger().print_newline();
+    }
+
+    if !makedeps_aur.is_empty() {
+        tracing::info!("{}", fl!("aur-make-dependencies"));
+        print_aur_package_list(&makedeps_aur).await;
+        empty = false;
+        get_logger().print_newline();
+    }
+
+    if !checkdeps_repo.is_empty() {
+        tracing::info!("{}", fl!("repo-check-dependencies"));
+        get_logger().print_list(&checkdeps_repo, "  ", 2);
+        empty = false;
+        get_logger().print_newline();
+    }
+
+    if !checkdeps_aur.is_empty() {
+        tracing::info!("{}", fl!("aur-check-dependencies"));
+        print_aur_package_list(&checkdeps_aur).await;
+        empty = false;
+        get_logger().print_newline();
+    }
+
+    empty
+}
+
+pub async fn print_aur_package_list(packages: &[&PackageInfo]) -> bool {
+    let pkgs = packages
+        .iter()
+        .map(|p| p.metadata.name.clone())
+        .collect::<HashSet<_>>();
+    let installed = PacmanQueryBuilder::all()
+        .query_with_output()
+        .await
+        .unwrap()
+        .into_iter()
+        .filter(|p| pkgs.contains(&p.name))
+        .map(|p| (p.name.clone(), p))
+        .collect::<HashMap<_, _>>();
+
+    get_logger().print_list(
+        packages.iter().map(|pkg| {
+            format!(
+                "{} {} {} ({} {}) {}",
+                console::pad_str(&pkg.metadata.name, 30, Alignment::Left, Some("...")).bold(),
+                fl!("version"),
+                pkg.metadata.version.clone().dim(),
+                pkg.metadata.num_votes,
+                fl!("votes"),
+                if installed.contains_key(&pkg.metadata.name) {
+                    format!("({})", fl!("capital-installed"))
+                } else {
+                    "".to_string()
+                }
+                .bold()
+                .magenta()
+            )
+        }),
+        "\n",
+        2,
+    );
+
+    !installed.is_empty()
+}
