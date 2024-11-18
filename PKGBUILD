@@ -1,6 +1,6 @@
 pkgname=epsilon
 pkgver=0.1.0
-pkgrel=1
+pkgrel=2
 pkgdesc="AxOS pacman wrapper and AUR helper"
 arch=('x86_64')
 license=('GPL')
@@ -15,5 +15,5 @@ build() {
 
 package() {
   cd "${srcdir}/"
-  install -Dm755 "target/release/epsi" "${pkgdir}/usr/bin/${pkgname}"
+  install -Dm755 "target/release/epsi" "${pkgdir}/usr/bin/epsi"
 }
