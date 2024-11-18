@@ -12,8 +12,14 @@ Made for AxOS, based on Crystal amethyst.
 - Parallel package building
 - Install and search packages from the AUR and any added repositories
     
-### Build
+### Install or Build
+Install with pkgbuild
+```bash
+ $ makepkg -si
+```
+or build from source
  ```bash
+  $ cd src/
   $ cargo build --release
   $ cargo run
  ```
