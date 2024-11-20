@@ -1,10 +1,11 @@
 pkgname=epsilon
 pkgver=0.1.0
-pkgrel=2
+pkgrel=3
 pkgdesc="AxOS pacman wrapper and AUR helper"
 arch=('x86_64')
 license=('GPL')
 makedepends=('cargo' 'rust')
+depends=('pacdiff-pacman-hook-git')
 # sha256sums=('SKIP') 
 
 build() {
