@@ -24,6 +24,19 @@ or build from source
   $ cargo run
  ```
   
+### Enable completions
+The folowing example is for bash, but you can replace it with your shell.
+```bash
+    # Create a new file in your home directory
+    $ touch ~/.epsilon_completion
+    # Add the output of the command below to the file (replace bash with your shell)
+    $ epsilon -G bash > ~/.epsilon_completion
+    # Add the following line to your shell configuration file
+    $ source ~/.epsilon_completion
+    # Restart your shell
+```
+This will enable completions for epsilon in your shell.
+
 ## 📜 License
 
 [GPLv3-only](https://choosealicense.com/licenses/gpl-3.0/)
