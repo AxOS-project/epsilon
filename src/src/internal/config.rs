@@ -5,8 +5,6 @@ use lazy_static::lazy_static;
 use serde::{Deserialize, Serialize};
 use std::fs;
 
-use crate::fl;
-
 use super::utils::get_config_dir;
 
 #[derive(Default, Debug, Deserialize, Serialize)]
@@ -65,11 +63,7 @@ impl Config {
         } else {
             let default_conf = Config::default();
             let toml_string = toml::ser::to_string_pretty(&default_conf).unwrap();
-            fs::write(
-                config_path,
-                format!("{}\n\n{}", fl!("config-docs"), toml_string),
-            )
-            .unwrap();
+            fs::write(config_path, toml_string).unwrap();
             default_conf
         }
     }

@@ -1,6 +1,6 @@
 pkgname=epsilon
 pkgver=0.1.0
-pkgrel=4
+pkgrel=5
 pkgdesc="AxOS pacman wrapper and AUR helper"
 arch=('x86_64')
 license=('GPL')
