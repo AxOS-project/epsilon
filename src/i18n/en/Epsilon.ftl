@@ -147,9 +147,6 @@ pacdiff-warning =
     Pacdiff uses vimdiff by default to edit files for merging. You can focus panes by mousing over them and pressing left click, and scroll up and down using your mouse's scroll wheel (or the arrow keys). To exit vimdiff, press the following key combination: ESC, :qa!, ENTER
     You can suppress this warning in the future by setting `pacdiff_warn` to "false" in ~/.config/epsi/config.toml
 
-# internal::config
-config-docs = # See https://getcryst.al/docs/Epsilon/config for more information on config keys
-
 # internal::paging
 quit = quit
 search-paging = search

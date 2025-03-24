@@ -128,7 +128,6 @@ pacdiff-warning =
     Zum Beenden von vimdiff können Sie folgende Tastenkombination ausführen: ESC, :qa!, ENTER
     Diese Warnung kann in der Konfigurationdatei ~/.config/epsi/config.toml unter der Einstellung `pacdiff_warn` ausgeschaltet werden, indem diese auf false gesetzt wird.
 # internal::config
-config-docs = # See https://getcryst.al/docs/Epsilon/config for more information on config keys
 # internal::paging
 quit = Beenden
 search = Suche
