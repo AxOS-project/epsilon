@@ -12,6 +12,29 @@ use crate::{fl, fl_error, fl_info, fl_warn, multi_select, Options};
 /// Upgrades all installed packages
 #[tracing::instrument(level = "trace")]
 pub async fn upgrade(args: UpgradeArgs, options: Options) {
+    if args.with_snapshot {
+        println!("Creating snapshot before upgrade...");
+
+        let result = std::process::Command::new("timeshift")
+            .args(["--create", "--comments", "Snapshot before upgrade"])
+            .status();
+
+        match result {
+            Ok(status) if status.success() => {
+                println!("Snapshot created successfully.");
+            }
+            Ok(status) => {
+                eprintln!("Snapshot tool exited with status: {:?}", status);
+                std::process::exit(AppExitCode::PacmanError as i32);
+            }
+            Err(e) => {
+                eprintln!("Failed to run snapshot tool: {e}");
+                eprintln!("If timeshift is not installed, then consider installing it to make snapshots!");
+                std::process::exit(AppExitCode::PacmanError as i32);
+            }
+        }
+    }
+
     if args.repo {
         upgrade_repo(options).await;
     }

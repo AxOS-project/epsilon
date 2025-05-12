@@ -24,6 +24,8 @@ pub struct Args {
     // So basically, it doesn't, but hey, we might as well have it here
     // anyways as some pacman commands can have a --quiet flag passed
     // to them.
+
+    // umm interesting backstory ig
     #[arg(long, short, global = true, help = fl!("quiet"))]
     pub quiet: bool,
 
@@ -119,6 +121,9 @@ pub struct UpgradeArgs {
 
     #[arg(long, short, help = fl!("upgrade-aur"))]
     pub aur: bool,
+
+    #[arg(long = "with-snapshot", help = "Create a snapshot before upgrading")]
+    pub with_snapshot: bool,
 }
 
 #[derive(Default, Debug, Clone, Parser)]
