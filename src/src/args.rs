@@ -38,7 +38,7 @@ pub struct Args {
 
 #[derive(Debug, Clone, Subcommand)]
 pub enum Operation {
-    #[command(bin_name = "epsi", name = "sync", aliases = & [ "-S" ], visible_aliases = & ["install", "i"], short_flag = 'S', about = fl!("install"))]
+    #[command(bin_name = "epsi", name = "install", aliases = & [ "-S" ], visible_aliases = & ["i"], short_flag = 'S', about = fl!("install"))]
     Install(InstallArgs),
 
     #[command(bin_name = "epsi", name = "remove", visible_aliases = & ["rm"], short_flag = 'R', about = fl!("remove"))]
@@ -64,6 +64,9 @@ pub enum Operation {
 
     #[command(bin_name = "epsi", name = "diff", short_flag = 'd', about = fl!("diff"))]
     Diff,
+
+    #[command(bin_name = "epsi", name = "sync", short_flag = 'y', about = fl!("sync"))]
+    Sync,
 }
 
 impl Default for Operation {

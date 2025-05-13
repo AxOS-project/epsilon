@@ -52,6 +52,11 @@ installed = installed
 # operations::uninstall
 failed-remove-pkgs = Failed to remove packages
 
+# operations::sync
+syncing-databases = Syncing databases
+error-syncing-databases = An error occurred while syncing databases: {$error}
+success-syncing-databases = Successfully synced databases
+
 # operations::upgrade
 failed-upgrade-repo-pkgs = Failed to upgrade repo packages
 success-upgrade-repo-pkgs = Successfully upgraded repo packages
@@ -179,6 +184,7 @@ gencomp = Generates shell completions for supported shells (bash, fish, elvish, 
 clean = Removes all orphaned packages
 checkupdates = Queries for and returns available package updates
 diff = Runs pacdiff
+sync = Syncs the package databases
 install-packages = The name of the package(s) to install or search for
 install-aur = Operate only on AUR packages
 install-repo = Operate only on repo packages
