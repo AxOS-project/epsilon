@@ -15,9 +15,9 @@ pub async fn upgrade(args: UpgradeArgs, options: Options) {
     if args.with_snapshot {
         println!("Creating snapshot before upgrade...");
 
-        let result = std::process::Command::new("timeshift")
-            .args(["--create", "--comments", "Snapshot before upgrade"])
-            .status();
+        let result = std::process::Command::new("sudo")
+        .args(["timeshift", "--create", "--comments", "Snapshot before upgrade"])
+        .status();    
 
         match result {
             Ok(status) if status.success() => {
