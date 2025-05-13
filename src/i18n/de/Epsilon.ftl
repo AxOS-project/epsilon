@@ -54,6 +54,17 @@ couldnt-find-remote-pkg = Remotepaket für { $pkg } konnte nicht gefunden werden
 no-upgrades-aur-package = Keine Aktualisierungen für AUR Pakete gefunden
 scanning-for-pacnew = Scanne für .pacnew Dateien nach Aktualisierung
 select-pkgs-upgrade = Wähle aus, welche AUR Pakete aktualisiert werden sollen
+snapshot-created-successfully = Snapshot erfolgreich erstellt.
+snapshot-tool-exited-status = Snapshot-Tool wurde mit Status beendet: {$status}
+failed-to-run-snapshot-tool = Fehler beim Ausführen des Snapshot-Tools: {$error}
+timeshift-not-installed = Wenn Timeshift nicht installiert ist, sollten Sie es in Betracht ziehen, es zu installieren, um Snapshots zu erstellen!
+timeshift-list-nonzero-status = Timeshift gab beim Auflisten der Snapshots einen Fehler zurück: {error}
+failed-to-run-snapshot-list-tool = Fehler beim Ausführen des Timeshift-Befehls zum Auflisten der Snapshots: {error}
+could-not-parse-snapshot-id = Snapshot-ID konnte aus der Zeile nicht gelesen werden: {line}
+snapshot-removed-successfully = Snapshot mit [epsilon] wurde erfolgreich entfernt.
+snapshot-tool-exited-status = Snapshot-Tool wurde mit folgendem Status beendet: {status}
+failed-to-run-snapshot-tool = Fehler beim Ausführen des Snapshot-Tools: {error}
+no-epsilon-snapshot-found = Kein Snapshot mit [epsilon] gefunden. Überspringe Löschung.
 # logging::output
 repo-dependencies = Paketabhängigkeiten aus den Pacman-Paketquellen
 aur-dependencies = Paketabhängigkeiten aus der AUR

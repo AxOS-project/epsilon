@@ -53,6 +53,18 @@ success-upgrade-repo-pkgs = Lyckades att uppgradera förråd paket
 couldnt-find-remote-pkg = Kunde inte hitta fjärrpaket för { $pkg }
 no-upgrades-aur-package = Inga uppgraderingar tillgängliga för installerade AUR-paket
 scanning-for-pacnew = Söker efter .pacnew-filer efter uppgradering
+snapshot-created-successfully = Snímka bola úspešne vytvorená.
+snapshot-tool-exited-status = Nástroj na vytváranie snímok skončil so stavom: {$status}
+failed-to-run-snapshot-tool = Nepodarilo sa spustiť nástroj na vytváranie snímok: {$error}
+timeshift-not-installed = Ak Timeshift nie je nainštalovaný, zvážte jeho inštaláciu na vytváranie snímok!
+timeshift-list-nonzero-status = Timeshift returnerade ett fel vid listning av ögonblicksbilder: {error}
+failed-to-run-snapshot-list-tool = Kunde inte köra Timeshift-kommando för att lista ögonblicksbilder: {error}
+could-not-parse-snapshot-id = Kunde inte tolka snapshot-ID från raden: {line}
+snapshot-removed-successfully = Snapshot med [epsilon] togs bort framgångsrikt.
+snapshot-tool-exited-status = Snapshot-verktyget avslutades med status: {status}
+failed-to-run-snapshot-tool = Fel vid körning av snapshot-verktyget: {error}
+no-epsilon-snapshot-found = Ingen snapshot med [epsilon] hittades. Hoppar över borttagning.
+
 # logging::output
 repo-dependencies = Förråd beroenden
 aur-dependencies = AUR beroenden

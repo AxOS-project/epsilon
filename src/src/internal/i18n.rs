@@ -82,6 +82,6 @@ macro_rules! fl_error {
     };
 
     ($message_id:literal, $($arg:tt)*) => {
-        tracing::error!("{}", $crate::fl!($message_id, $($args)*))
+        tracing::error!("{}", $crate::fl!($message_id, $($arg)*)) // dont make it $($args)* because it doesnt WORK
     };
 }
