@@ -145,6 +145,18 @@ couldnt-find-all-pkgs = Не вдалося знайти усі пакети
 do-you-want-to-install = Встановити ці пакети та їх залежності?
 dependency-cycle = Виявлено цикл залежностей. Аварійне завершення.
 couldnt-find-pkg-produced = Не вдалося знайти пакет { $pkg } у створених пакетах
+snapshot-created-successfully = Снімок успішно створено.
+snapshot-tool-exited-status = Інструмент створення знімків вийшов зі статусом: {$status}
+failed-to-run-snapshot-tool = Не вдалося запустити інструмент створення знімків: {$error}
+timeshift-not-installed = Якщо Timeshift не встановлений, розгляньте можливість його встановлення для створення знімків!
+timeshift-list-nonzero-status = Timeshift повернув помилку під час перегляду знімків: {error}
+failed-to-run-snapshot-list-tool = Не вдалося виконати команду Timeshift для перегляду знімків: {error}
+could-not-parse-snapshot-id = Не вдалося розпізнати ID знімку з рядка: {line}
+snapshot-removed-successfully = Знімок із [epsilon] успішно видалено.
+snapshot-tool-exited-status = Інструмент знімків завершився зі статусом: {status}
+failed-to-run-snapshot-tool = Помилка при запуску інструменту знімків: {error}
+no-epsilon-snapshot-found = Знімок із [epsilon] не знайдено. Видалення пропущено.
+
 # operations::aur_install::aur_download
 all-sources-ready = Усі джерела готові.
 # operations::aur_install::aur_dependency_installation

@@ -60,6 +60,17 @@ no-upgrades-aur-package = No upgrades available for installed AUR packages
 scanning-for-pacnew = Scanning for .pacnew files post-upgrade
 aur-check-upgrades = Checking for AUR package upgrades
 select-pkgs-upgrade = Select which AUR packages to upgrade
+snapshot-created-successfully = Snapshot created successfully.
+snapshot-tool-exited-status = Snapshot tool exited with status: {$status}
+failed-to-run-snapshot-tool = Failed to run snapshot tool: {$error}
+timeshift-not-installed = If timeshift is not installed, then consider installing it to make snapshots!
+timeshift-list-nonzero-status = Timeshift returned a non-zero exit code while listing snapshots: {$error}
+failed-to-run-snapshot-list-tool = Failed to run Timeshift snapshot list command: {$error}
+could-not-parse-snapshot-id = Could not parse snapshot ID from line: {$line}
+snapshot-removed-successfully = Snapshot with [epsilon] removed successfully.
+snapshot-tool-exited-status = Snapshot tool exited with status: {$status}
+failed-to-run-snapshot-tool = Failed to run snapshot tool: {$error}
+no-epsilon-snapshot-found = No snapshot with [epsilon] found. Skipping deletion.
 
 # logging::output
 repo-dependencies = Repo dependencies

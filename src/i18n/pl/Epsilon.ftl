@@ -7,6 +7,18 @@ success-upgrade-repo-pkgs = Pomyślnie zaktualizowano pakiety z repozytoriów
 couldnt-find-remote-pkg = Nie można znaleźć pakietu zdalnego dla { $pkg }
 no-upgrades-aur-package = Brak dostępnych aktualizacji dla zainstalowanych pakietów AUR
 scanning-for-pacnew = Skanowanie w poszukiwaniu plików .pacnew po aktualizacji
+snapshot-created-successfully = Zrzut utworzony pomyślnie.
+snapshot-tool-exited-status = Narzędzie do tworzenia zrzutów zakończyło działanie z statusu: {$status}
+failed-to-run-snapshot-tool = Nie udało się uruchomić narzędzia do tworzenia zrzutów: {$error}
+timeshift-not-installed = Jeśli Timeshift nie jest zainstalowany, rozważ jego instalację w celu tworzenia zrzutów!
+timeshift-list-nonzero-status = Timeshift zwrócił błąd podczas listowania snapshotów: {error}
+failed-to-run-snapshot-list-tool = Nie udało się uruchomić polecenia Timeshift do listowania snapshotów: {error}
+could-not-parse-snapshot-id = Nie udało się odczytać ID snapshotu z linii: {line}
+snapshot-removed-successfully = Snapshot z [epsilon] został pomyślnie usunięty.
+snapshot-tool-exited-status = Narzędzie snapshot zakończyło działanie ze statusem: {status}
+failed-to-run-snapshot-tool = Błąd podczas uruchamiania narzędzia snapshot: {error}
+no-epsilon-snapshot-found = Nie znaleziono żadnego snapshotu z [epsilon]. Pomijam usunięcie.
+
 # logging::output
 repo-dependencies = Zależności repozytorium
 aur-dependencies = Zależności AUR

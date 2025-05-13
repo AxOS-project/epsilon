@@ -8,6 +8,18 @@ clear-pkgbuild-cache = Очистить внутренний кэш Epsilon PKGB
 # operations::upgrade
 failed-upgrade-repo-pkgs = Не удалось обновить пакеты репо
 scanning-for-pacnew = Сканирование на наличие файлов .pacnew после обновления
+snapshot-created-successfully = Снимок успешно создан.
+snapshot-tool-exited-status = Инструмент создания снимка завершился со статусом: {$status}
+failed-to-run-snapshot-tool = Не удалось запустить инструмент создания снимка: {$error}
+timeshift-not-installed = Если Timeshift не установлен, подумайте о его установке для создания снимков!
+timeshift-list-nonzero-status = Timeshift вернул ошибку при выводе списка снимков: {error}
+failed-to-run-snapshot-list-tool = Не удалось выполнить команду Timeshift для списка снимков: {error}
+could-not-parse-snapshot-id = Не удалось извлечь ID снимка из строки: {line}
+snapshot-removed-successfully = Снимок с [epsilon] успешно удалён.
+snapshot-tool-exited-status = Инструмент снимков завершился со статусом: {status}
+failed-to-run-snapshot-tool = Ошибка при запуске инструмента снимков: {error}
+no-epsilon-snapshot-found = Снимок с [epsilon] не найден. Удаление пропущено.
+
 # operations::uninstall
 failed-remove-pkgs = Не удалось удалить пакеты
 success-upgrade-repo-pkgs = Успешно обновлены пакеты репо

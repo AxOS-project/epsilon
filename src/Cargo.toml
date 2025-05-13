@@ -1,6 +1,6 @@
 [package]
 name = "Epsilon"
-version = "0.1.0"
+version = "0.1.1"
 authors = ["Ardox <ardox@axos-project.com>"]
 description = "A fast and efficient AUR helper"
 keywords = ["aur", "axos", "pacman", "aur-helper"]

@@ -122,8 +122,24 @@ pub struct UpgradeArgs {
     #[arg(long, short, help = fl!("upgrade-aur"))]
     pub aur: bool,
 
-    #[arg(long = "with-snapshot", help = "Create a snapshot before upgrading")]
+    #[arg(long = "with-snapshot", short = 's', help = "Create a snapshot before upgrading")]
     pub with_snapshot: bool,
+
+    #[arg(
+        long = "replace-snapshot",
+        short = 'x',
+        help = "Deletes the previous snapshot and creates a new one",
+        requires = "with_snapshot"
+    )]
+    pub replace_snapshot: bool,
+
+    #[arg(
+        long = "delete-snapshot-onfail",
+        short = 'd',
+        help = "Deletes snapshot if the update fails",
+        requires = "with_snapshot"
+    )]
+    pub delete_snapshot_onfail: bool,
 }
 
 #[derive(Default, Debug, Clone, Parser)]
