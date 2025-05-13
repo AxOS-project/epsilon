@@ -374,3 +374,16 @@ impl PacmanUninstallBuilder {
         command.wait_success().await
     }
 }
+
+#[derive(Default, Debug, Clone)]
+pub struct PacmanDatabasesSyncBuilder {
+    no_confirm: bool,
+}
+
+impl PacmanDatabasesSyncBuilder {
+
+    #[tracing::instrument(level = "trace")]
+    pub async fn sync(self) -> AppResult<()> {
+        ShellCommand::pacman().elevated().arg("-Sy").wait_success().await
+    }
+}

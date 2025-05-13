@@ -77,6 +77,7 @@ async fn main() {
         Operation::CheckUpdates => cmd_checkupdates().await,
         Operation::GenComp(gen_args) => cmd_gencomp(&gen_args),
         Operation::Diff => detect().await,
+        Operation::Sync => operations::sync().await,
     }
 }
 
