@@ -90,7 +90,7 @@ async fn delete_snapshot(_options: Options) {
         Some(line) => {
             let snapshot_name = line
                 .split_whitespace()
-                .nth(1)
+                .nth(2)
                 .unwrap_or("");
 
 
