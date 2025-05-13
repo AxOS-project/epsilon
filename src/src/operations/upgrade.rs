@@ -79,6 +79,8 @@ async fn delete_snapshot(_options: Options) {
     };
 
     let stdout = String::from_utf8_lossy(&output.stdout);
+    tracing::debug!("Snapshot list output: {}", stdout);
+
     let snapshot_line = stdout
         .lines()
         .rev() // gets the latest epsilon snapshot
@@ -86,18 +88,19 @@ async fn delete_snapshot(_options: Options) {
 
     match snapshot_line {
         Some(line) => {
-            let snapshot_id = line
+            let snapshot_name = line
                 .split_whitespace()
-                .next()
+                .nth(1)
                 .unwrap_or("");
 
-            if snapshot_id.is_empty() {
+
+            if snapshot_name.is_empty() {
                 fl_error!("could-not-parse-snapshot-id", line = line.to_string());
                 std::process::exit(AppExitCode::PacmanError as i32);
             }
 
             let delete_result = std::process::Command::new("sudo")
-                .args(["timeshift", "--delete", "--snapshot", snapshot_id])
+                .args(["timeshift", "--delete", "--snapshot", snapshot_name])
                 .status();
 
             match delete_result {
