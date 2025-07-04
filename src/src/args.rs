@@ -115,6 +115,9 @@ pub struct QueryArgs {
 
     #[arg(long, short, help = fl!("query-owns"))]
     pub owns: Option<String>,
+
+    #[arg()]
+    pub pkgs: Vec<String>, // this will be equal to "pacman -Q <pkg1> <pkg2>"
 }
 
 #[derive(Default, Debug, Clone, Parser)]
