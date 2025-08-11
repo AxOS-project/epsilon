@@ -25,12 +25,12 @@ pub async fn upgrade(args: UpgradeArgs, options: Options) {
     }
 
     if args.aur {
-        upgrade_aur(options).await;
+        upgrade_aur(&args, options).await;
     }
 
     if !args.aur && !args.repo {
         upgrade_repo(&args, options).await;
-        upgrade_aur(options).await;
+        upgrade_aur(&args, options).await;
     }
 }
 
@@ -39,8 +39,13 @@ async fn create_snapshot(options: Options) {
     tracing::debug!("Creating snapshot before upgrade...");
 
     let result = std::process::Command::new("sudo")
-    .args(["timeshift", "--create", "--comments", "Snapshot before upgrade [epsilon]"])
-    .status(); 
+        .args([
+            "timeshift",
+            "--create",
+            "--comments",
+            "Snapshot before upgrade [epsilon]",
+        ])
+        .status();
 
     match result {
         Ok(status) if status.success() => {
@@ -69,7 +74,10 @@ async fn delete_snapshot(_options: Options) {
     let output = match output {
         Ok(out) if out.status.success() => out,
         Ok(out) => {
-            fl_error!("timeshift-list-nonzero-status", error = String::from_utf8_lossy(&out.stderr));
+            fl_error!(
+                "timeshift-list-nonzero-status",
+                error = String::from_utf8_lossy(&out.stderr)
+            );
             std::process::exit(AppExitCode::PacmanError as i32);
         }
         Err(e) => {
@@ -88,11 +96,7 @@ async fn delete_snapshot(_options: Options) {
 
     match snapshot_line {
         Some(line) => {
-            let snapshot_name = line
-                .split_whitespace()
-                .nth(2)
-                .unwrap_or("");
-
+            let snapshot_name = line.split_whitespace().nth(2).unwrap_or("");
 
             if snapshot_name.is_empty() {
                 fl_error!("could-not-parse-snapshot-id", line = line.to_string());
@@ -139,7 +143,8 @@ async fn upgrade_repo(args: &UpgradeArgs, options: Options) {
     if result.is_err() {
         fl_error!("failed-upgrade-repo-pkgs");
         fl_info!("exiting");
-        if args.delete_snapshot_onfail { // delete the saved snapshot if the argument is called.
+        if args.delete_snapshot_onfail {
+            // delete the saved snapshot if the argument is called.
             delete_snapshot(options).await;
         }
         std::process::exit(AppExitCode::PacmanError as i32);
@@ -149,7 +154,7 @@ async fn upgrade_repo(args: &UpgradeArgs, options: Options) {
 }
 
 #[tracing::instrument(level = "trace")]
-async fn upgrade_aur(options: Options) {
+async fn upgrade_aur(args: &UpgradeArgs, options: Options) {
     tracing::debug!("Upgrading AUR packages");
     fl_info!("aur-check-upgrades");
 
@@ -206,6 +211,8 @@ async fn upgrade_aur(options: Options) {
         fl_info!("no-upgrades-aur-package");
     }
 
-    fl_info!("scanning-for-pacnew");
-    detect().await;
+    if args.pacnew_after_upgrade {
+        fl_info!("scanning-for-pacnew");
+        detect().await;
+    }
 }

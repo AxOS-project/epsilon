@@ -1,6 +1,6 @@
 [package]
 name = "Epsilon"
-version = "1.1.0"
+version = "1.3.0"
 authors = ["Ardox <ardox@axos-project.com>"]
 description = "A fast and efficient AUR helper"
 keywords = ["aur", "axos", "pacman", "aur-helper"]
@@ -26,15 +26,27 @@ minus = { version = "5.0.5", features = ["search", "static_output"] }
 alpm = "4.0.0"
 alpm-utils = "4.0.1"
 pacmanconf = "3.0.0"
-chrono = { version = "0.4.22", default-features = false, features = [ "clock", "std", "wasmbind" ] }
+chrono = { version = "0.4.22", default-features = false, features = [
+    "clock",
+    "std",
+    "wasmbind",
+] }
 trigram = "0.4.4"
-clap = { version = "4.0.19", features = [ "derive", "wrap_help" ] }
-regex = { version = "1.7.0", default-features = false, features = [ "std", "unicode-perl" ] }
+clap = { version = "4.0.19", features = ["derive", "wrap_help"] }
+regex = { version = "1.7.0", default-features = false, features = [
+    "std",
+    "unicode-perl",
+] }
 colored = "2.0.0"
-serde = { version = "1.0.147", default-features = false, features = [ "derive", "serde_derive" ] }
+serde = { version = "1.0.147", default-features = false, features = [
+    "derive",
+    "serde_derive",
+] }
 native-tls = { version = "0.2.10", default-features = false }
 libc = { version = "0.2.137", default-features = false }
-aur-rpc = { version = "0.2.2", default-features = false, features = ["rustls-tls"] }
+aur-rpc = { version = "0.2.2", default-features = false, features = [
+    "rustls-tls",
+] }
 futures = "0.3.25"
 tracing = "0.1.37"
 tracing-subscriber = { version = "0.3.16", features = ["env-filter"] }
@@ -53,7 +65,10 @@ directories = "4.0.1"
 console = "0.15.2"
 tracing-error = "0.2.0"
 fuzzy-matcher = "0.3.7"
-i18n-embed = { version = "0.13.4", features = ["fluent-system", "desktop-requester"] }
+i18n-embed = { version = "0.13.4", features = [
+    "fluent-system",
+    "desktop-requester",
+] }
 i18n-embed-fl = "0.6.4"
 thiserror = "1.0.37"
 rust-embed = "6.4.2"
@@ -64,8 +79,8 @@ features = ["toml"]
 
 [dependencies.tokio]
 version = "1.21.0"
-features = ["process", "macros", "rt-multi-thread", "tracing"]
+features = ["process", "macros", "rt-multi-thread", "tracing", "full"]
 
 [build-dependencies]
-cargo_toml = "0.13.0"
+cargo_toml = "0.22.1"
 serde = { version = "1.0.147", features = ["derive"] }

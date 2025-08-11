@@ -1,5 +1,5 @@
 pkgname=epsilon
-pkgver=1.2
+pkgver=1.3
 pkgrel=1
 pkgdesc="AxOS pacman wrapper and AUR helper"
 arch=('x86_64')

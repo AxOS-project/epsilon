@@ -3,9 +3,7 @@
 use crate::{fl, operations::SearchBy};
 use clap::{ArgAction, Parser, Subcommand, ValueHint};
 
-static VERSION: &str = concat!(
-    env!("CARGO_PKG_VERSION"),
-);
+static VERSION: &str = concat!(env!("CARGO_PKG_VERSION"),);
 
 #[derive(Debug, Clone, Parser)]
 #[command(bin_name = "epsi", name = "Epsilon", version = VERSION, about = fl!("description"), infer_subcommands = true)]
@@ -128,7 +126,11 @@ pub struct UpgradeArgs {
     #[arg(long, short, help = fl!("upgrade-aur"))]
     pub aur: bool,
 
-    #[arg(long = "with-snapshot", short = 's', help = "Create a snapshot before upgrading")]
+    #[arg(
+        long = "with-snapshot",
+        short = 's',
+        help = "Create a snapshot before upgrading"
+    )]
     pub with_snapshot: bool,
 
     #[arg(
@@ -146,6 +148,13 @@ pub struct UpgradeArgs {
         requires = "with_snapshot"
     )]
     pub delete_snapshot_onfail: bool,
+
+    #[arg(
+        long = "pacnewscan",
+        short,
+        help = "Scan for pacnew files after the upgrade and let the user manage them"
+    )]
+    pub pacnew_after_upgrade: bool,
 }
 
 #[derive(Default, Debug, Clone, Parser)]
