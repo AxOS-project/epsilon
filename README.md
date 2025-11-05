@@ -27,13 +27,12 @@ or build from source
 ### Enable completions
 The folowing example is for bash, but you can replace it with your shell.
 ```bash
-    # Create a new file in your home directory
-    $ touch ~/.epsilon_completion
-    # Add the output of the command below to the file (replace bash with your shell)
-    $ epsilon -G bash > ~/.epsilon_completion
-    # Add the following line to your shell configuration file
-    $ source ~/.epsilon_completion
-    # Restart your shell
+# Add the output of the command below to the file (replace bash with your shell)
+epsilon -G bash > ~/.epsilon_completion
+# Add the following line to your shell configuration file
+printf '\nsource ~/.epsilon_completion' >> ~/.bashrc
+# Source it to enable completions in the current shell
+source ~/.epsilon_completion
 ```
 This will enable completions for epsilon in your shell.
 
