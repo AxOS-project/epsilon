@@ -72,6 +72,8 @@ i18n-embed = { version = "0.13.4", features = [
 i18n-embed-fl = "0.6.4"
 thiserror = "1.0.37"
 rust-embed = "6.4.2"
+serde_yaml = "0.9.34"
+serde_json = "1.0.147"
 
 [dependencies.config]
 version = "0.13.2"

@@ -1,0 +1,21 @@
+{
+    "packages": {
+        "install": ["firefox", "vim"],
+        "remove": ["nano"]
+    },
+
+    "packages_aur": {
+        "install": ["shim-signed"],
+        "remove": []
+    },
+
+    "repo-add": {
+        "siglevel": "Optional Trust All",
+        "server": "https://axos-project.com/AxMirrors/$arch"
+    },
+
+    "services": {
+        "enable": ["docker"],
+        "disable": ["mongod"]
+    }
+}
