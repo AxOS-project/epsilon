@@ -9,9 +9,10 @@ packages-aur:
   install:
     - shim-signed
 
-repo-add:
-  siglevel: Optional TrustAll
-  server: https://axos-project.com/AxMirrors/$arch
+repos:
+  axos:
+    siglevel: Optional TrustAll
+    server: https://axos-project.com/AxMirrors/$arch
 
 services:
   enable:

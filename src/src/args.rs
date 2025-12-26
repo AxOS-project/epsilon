@@ -91,6 +91,9 @@ pub struct InstallArgs {
     #[arg(long, short, help = fl!("install-repo"))]
     pub repo: bool,
 
+    #[arg(long, short, help = fl!("install-needed"))]
+    pub needed: bool,
+
     #[arg(hide = true, short = 's', help = fl!("install-search"))]
     pub search: bool,
 
@@ -175,7 +178,7 @@ pub struct ManifestApplyArgs {
     #[arg(required = true, help = fl!("manifest-path"))]
     pub manifest_path: PathBuf,
 
-    #[arg(long, short = 'I', help = "Install all the packages instead of needed")]
+    #[arg(long, short = 'I', help = "Reinstall up to date packages too")]
     pub install_all: bool,
 }
 

@@ -88,10 +88,13 @@ async fn main() {
 }
 
 #[tracing::instrument(level = "trace")]
-async fn cmd_install(args: InstallArgs, options: Options) {
+async fn cmd_install(args: InstallArgs, mut options: Options) {
     let packages = &args.packages;
     let both = !args.aur && !args.repo;
     let noconfirm = options.noconfirm;
+
+    // update needed
+    options.needed = args.needed;
 
     match args.search {
         true => {

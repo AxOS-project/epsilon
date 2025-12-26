@@ -193,6 +193,7 @@ sync = Syncs the package databases
 install-packages = The name of the package(s) to install or search for
 install-aur = Operate only on AUR packages
 install-repo = Operate only on repo packages
+install-needed = Do not reinstall up to date packages
 install-search = Search packages for a given pattern instead of installing
 install-by = Searches by a specific field
 manifest = Perform actions on/for epsilon package manifest
