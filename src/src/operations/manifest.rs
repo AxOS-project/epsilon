@@ -5,9 +5,77 @@ use crate::args::ManifestGenerateArgs;
 use crate::error::SilentUnwrap;
 use super::{install, uninstall, aur_install};
 use std::collections::HashMap;
+use std::process::{Command, Stdio};
 use dialoguer::Confirm;
 use std::path::PathBuf;
+use std::io::Write;
 use std::fs;
+
+
+fn append_repo_sudo(name: &str, repo_block: &str) {
+    // Backup original
+    let path = "/etc/pacman.conf";
+    let backup_path = "/etc/pacman.conf.bak";
+
+    tracing::info!("Creating backup at {}", backup_path);
+
+    let status = Command::new("sudo")
+        .arg("cp")
+        .arg(path)
+        .arg(backup_path)
+        .status()
+        .unwrap_or_else(|_| fl_crash!(
+            AppExitCode::Other,
+            "failed-to-backup-repo-file",
+            file = path
+        ));
+
+    if !status.success() {
+        fl_crash!(
+            AppExitCode::Other,
+            "failed-to-backup-repo-file",
+            file = path
+        );
+    }
+
+    // Append via sudo tee
+    let mut child = Command::new("sudo")
+        .arg("tee")
+        .arg("-a") // append
+        .arg(path)
+        .stdin(Stdio::piped())
+        .stdout(Stdio::null())
+        .stderr(Stdio::null())
+        .spawn()
+        .unwrap_or_else(|_| fl_crash!(
+            AppExitCode::Other,
+            "failed-to-start-sudo-tee",
+            file = path
+        ));
+
+    {
+        let stdin = child.stdin.as_mut().unwrap();
+        stdin.write_all(repo_block.as_bytes()).unwrap_or_else(|_| fl_crash!(
+            AppExitCode::Other,
+            "failed-to-write-to-sudo-tee",
+            repo = name
+        ));
+    }
+
+    let status = child.wait().unwrap_or_else(|_| fl_crash!(
+        AppExitCode::Other,
+        "failed-to-wait-for-sudo-tee",
+        repo = name
+    ));
+
+    if !status.success() {
+        fl_crash!(
+            AppExitCode::Other,
+            "sudo-tee-exited-with-error",
+            repo = name
+        );
+    }
+}
 
 #[tracing::instrument(level = "trace")]
 pub async fn interpret_manifest(
@@ -84,7 +152,29 @@ pub async fn interpret_manifest(
                 repo.server
             );
 
-            tracing::warn!("TODO: This step is not yet implemented!");
+            let exists = Command::new("pacman-conf")
+                .arg("--repo")
+                .arg(name)
+                .stdout(Stdio::null())
+                .stderr(Stdio::null())
+                .status()
+                .map(|s| s.success())
+                .unwrap_or(false);
+
+            if exists {
+                tracing::info!("Repo '{}' already exists, skipping", name);
+                continue;
+            }
+
+            tracing::info!("Writing repo '{}'", name);
+            let repo_block = format!(
+                "[{}]\nSigLevel = {}\nServer = {}\n\n",
+                name,
+                repo.siglevel.as_deref().unwrap_or("Optional TrustAll"),
+                repo.server
+            );
+
+            append_repo_sudo(name, &repo_block);
         }
     }
 
@@ -118,15 +208,6 @@ pub async fn generate_manifest(args: &ManifestGenerateArgs, noconfirm: &bool) {
     }
 
     tracing::info!("Generating epsilon manifest...");
-    if let Some(repos) = &args.exclude_repos {
-        tracing::debug!(
-            "Excluding repositories: {}",
-            repos.join(", ")
-        );
-    } else {
-        tracing::debug!("No repositories excluded");
-    }
-
     if args.include_aur {
         tracing::warn!("User enabled AUR inclusion, which may be unstable.");
     }

@@ -196,9 +196,6 @@ pub struct ManifestGenerateArgs {
     #[arg(long, short = 'a', help = "Include AUR Packages in the generated manifest")]
     pub include_aur: bool,
 
-    #[arg(long, short = 'e', help = "Exclude packages from certain repositories")]
-    pub exclude_repos: Option<Vec<String>>,
-
     #[arg(long, short = 'S', help = "Enabled services")]
     pub enabled_services: Option<Vec<String>>,
 

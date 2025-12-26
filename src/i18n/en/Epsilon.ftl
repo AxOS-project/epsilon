@@ -145,6 +145,12 @@ package-does-not-exist = Package {$package} does not exist, skipping...
 # operations::manifest
 manifest-abort = Manifest generation aborted by user
 failed-to-write-manifest = Failed to write the manifest file to '{$file}'
+failed-to-write-repo = Failed to write repository for '{$repo}'
+failed-to-backup-repo-file = Failed to create a backup of '{$file}'
+failed-to-start-sudo-tee = Failed to start 'sudo tee' for '{$file}'
+failed-to-write-to-sudo-tee = Failed to write repository block for '{$repo}'
+failed-to-wait-for-sudo-tee = Failed to wait for 'sudo tee' for '{$repo}'
+sudo-tee-exited-with-error = 'sudo tee' exited with an error while writing '{$repo}'
 
 # internal::error
 non-zero-exit = Exited with non zero code
