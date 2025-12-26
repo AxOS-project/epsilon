@@ -174,6 +174,9 @@ pub enum ManifestCommand {
 pub struct ManifestApplyArgs {
     #[arg(required = true, help = fl!("manifest-path"))]
     pub manifest_path: PathBuf,
+
+    #[arg(long, short = 'I', help = "Install all the packages instead of needed")]
+    pub install_all: bool,
 }
 
 #[derive(Default, Debug, Clone, Parser)]

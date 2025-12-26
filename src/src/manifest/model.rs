@@ -1,5 +1,6 @@
 use serde::{Deserialize, Serialize};
 use std::error::Error;
+use std::collections::HashMap;
 
 #[derive(Debug, Serialize, Deserialize, Default)]
 pub struct Manifest {
@@ -9,8 +10,8 @@ pub struct Manifest {
     #[serde(rename = "packages-aur", default)]
     pub packages_aur: PackageActions,
 
-    #[serde(rename = "repo-add", default)]
-    pub repo_add: RepoAdd,
+    #[serde(default)]
+    pub repos: HashMap<String, RepoSpec>,
 
     #[serde(default)]
     pub services: ServiceActions,
@@ -25,17 +26,18 @@ pub struct PackageActions {
 }
 
 #[derive(Debug, Serialize, Deserialize, Default)]
+pub struct RepoSpec {
+    #[serde(default)]
+    pub siglevel: Option<String>,
+    pub server: String,
+}
+
+#[derive(Debug, Serialize, Deserialize, Default)]
 pub struct ServiceActions {
     #[serde(default)]
     pub enable: Vec<String>,
     #[serde(default)]
     pub disable: Vec<String>,
-}
-
-#[derive(Debug, Serialize, Deserialize, Default)]
-pub struct RepoAdd {
-    pub siglevel: String,
-    pub server: String,
 }
 
 impl Manifest {

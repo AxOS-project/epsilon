@@ -52,6 +52,7 @@ async fn main() {
         quiet,
         asdeps: false,
         upgrade: false,
+        needed: false,
     };
 
     if args.sudoloop {
@@ -74,7 +75,7 @@ async fn main() {
             fl_info!("system-upgrade");
             operations::upgrade(upgrade_args, options).await;
         }
-        Operation::Manifest { command } => cmd_manifest(&command, &noconfirm).await,
+        Operation::Manifest { command } => cmd_manifest(&command, &noconfirm, &quiet).await,
         Operation::Clean => {
             fl_info!("removing-orphans");
             operations::clean(options).await;
@@ -288,10 +289,15 @@ async fn cmd_checkupdates() {
 }
 
 #[tracing::instrument(level = "trace")]
-async fn cmd_manifest(cmd: &ManifestCommand, noconfirm: &bool) {
+async fn cmd_manifest(cmd: &ManifestCommand, noconfirm: &bool, quiet: &bool) {
     match cmd {
         ManifestCommand::Apply(args) => {
-            operations::interpret_manifest(&args.manifest_path).await;
+            operations::interpret_manifest(
+                &args.manifest_path, 
+                args.install_all,
+                noconfirm, 
+                quiet,
+            ).await;
         }
         ManifestCommand::Generate(args) => {
             operations::generate_manifest(&args, noconfirm).await;

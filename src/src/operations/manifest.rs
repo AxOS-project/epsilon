@@ -1,21 +1,27 @@
-use crate::manifest::{Manifest, PackageActions, ServiceActions, RepoAdd};
+use crate::manifest::{Manifest, PackageActions, ServiceActions};
 use crate::internal::exit_code::AppExitCode;
-use crate::{fl_crash, PacmanQueryBuilder, PacmanColor};
+use crate::{fl_crash, PacmanQueryBuilder, PacmanColor, Options};
 use crate::args::ManifestGenerateArgs;
 use crate::error::SilentUnwrap;
-use super::search;
+use super::{install, uninstall};
+use std::collections::HashMap;
 use dialoguer::Confirm;
 use std::path::PathBuf;
 use std::fs;
 
 #[tracing::instrument(level = "trace")]
-pub async fn interpret_manifest(manifest_path: &PathBuf) {
+pub async fn interpret_manifest(
+    manifest_path: &PathBuf, 
+    install_all: bool,
+    noconfirm: &bool, 
+    quiet: &bool,
+) {
     tracing::debug!("Interpreting config: {}", manifest_path.display());
 
     // user facing config is expected to be in YAML
-    let yaml_config_str = match fs::read_to_string(manifest_path) {
+    let yaml_config = match fs::read_to_string(manifest_path) {
         Ok(c) => c,
-        Err(e) => {
+        Err(_) => {
             fl_crash!(
                 AppExitCode::Other,
                 "couldnt-find-file",
@@ -24,9 +30,62 @@ pub async fn interpret_manifest(manifest_path: &PathBuf) {
         }
     };
 
-    let yaml_config = Manifest::from_yaml_str(&yaml_config_str).unwrap();
+    let config = Manifest::from_yaml_str(&yaml_config).unwrap();
+    let options = Options {
+        noconfirm: noconfirm.clone(),
+        quiet: quiet.clone(),
+        asdeps: false,
+        upgrade: false,
+        needed: !install_all,
+    };
 
-    tracing::info!("CONF: {:#?}", yaml_config);
+    // Install & Uninstall
+    tracing::info!(
+        "Installing {} repo packages, {} AUR packages",
+        config.packages.install.len(),
+        config.packages_aur.install.len()
+    );
+
+    install::install(config.packages.install, options).await;
+    install::install(config.packages_aur.install, options).await;
+
+    tracing::info!(
+        "Removing {} repo packages, {} AUR packages",
+        config.packages.remove.len(),
+        config.packages_aur.remove.len()
+    );
+
+    uninstall::uninstall(config.packages.remove, options).await;
+    uninstall::uninstall(config.packages_aur.remove, options).await;
+
+    // Handling repos to be added
+    if config.repos.is_empty() {
+        tracing::debug!("No repositories defined in manifest");
+    } else {
+        tracing::info!(
+            "Applying {} repository definitions",
+            config.repos.len()
+        );
+
+        for (name, repo) in &config.repos {
+            tracing::info!(
+                "Configuring repo '{}': {}",
+                name,
+                repo.server
+            );
+
+            tracing::warn!("TODO: This step is not yet implemented!");
+        }
+    }
+
+    // Handling service enable/disable
+    for e_service in config.services.enable {
+        tracing::warn!("TODO: Enable service");
+    }
+
+    for d_service in config.services.disable {
+        tracing::warn!("TODO: Disable service");
+    }
 }
 
 #[tracing::instrument(level = "trace")]
@@ -93,7 +152,7 @@ pub async fn generate_manifest(args: &ManifestGenerateArgs, noconfirm: &bool) {
         }
     };
 
-    let repo_add = RepoAdd::default();
+    let repos = HashMap::new();
 
     let services = ServiceActions {
         enable: args.enabled_services.clone().unwrap_or_else(Vec::new),
@@ -103,7 +162,7 @@ pub async fn generate_manifest(args: &ManifestGenerateArgs, noconfirm: &bool) {
     let manifest = Manifest {
         packages,
         packages_aur,
-        repo_add,
+        repos,
         services,
     };
 
