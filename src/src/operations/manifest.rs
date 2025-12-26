@@ -3,7 +3,7 @@ use crate::internal::exit_code::AppExitCode;
 use crate::{fl_crash, PacmanQueryBuilder, PacmanColor, Options};
 use crate::args::ManifestGenerateArgs;
 use crate::error::SilentUnwrap;
-use super::{install, uninstall};
+use super::{install, uninstall, aur_install};
 use std::collections::HashMap;
 use dialoguer::Confirm;
 use std::path::PathBuf;
@@ -46,8 +46,13 @@ pub async fn interpret_manifest(
         config.packages_aur.install.len()
     );
 
-    install::install(config.packages.install, options).await;
-    install::install(config.packages_aur.install, options).await;
+    if !config.packages.install.is_empty() {
+        install::install(config.packages.install, options).await;
+    }
+
+    if !config.packages_aur.install.is_empty() {
+        aur_install::aur_install(config.packages_aur.install, options).await;
+    }
 
     tracing::info!(
         "Removing {} repo packages, {} AUR packages",
@@ -55,8 +60,13 @@ pub async fn interpret_manifest(
         config.packages_aur.remove.len()
     );
 
-    uninstall::uninstall(config.packages.remove, options).await;
-    uninstall::uninstall(config.packages_aur.remove, options).await;
+    if !config.packages.remove.is_empty() {
+        uninstall::uninstall(config.packages.remove, options).await;
+    }
+
+    if !config.packages_aur.remove.is_empty() {
+        uninstall::uninstall(config.packages_aur.remove, options).await;
+    }
 
     // Handling repos to be added
     if config.repos.is_empty() {
