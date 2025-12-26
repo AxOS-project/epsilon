@@ -23,6 +23,7 @@ impl PacmanInstallBuilder {
             .as_deps(options.asdeps)
             .no_confirm(options.noconfirm)
             .quiet(options.quiet)
+            .needed(options.needed)
     }
 
     pub fn packages<I: IntoIterator<Item = S>, S: ToString>(mut self, packages: I) -> Self {

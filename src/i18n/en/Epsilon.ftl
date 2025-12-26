@@ -19,6 +19,7 @@ uninstalling-packages = Uninstalling packages: {$packages}
 system-upgrade = Performing system upgrade
 removing-orphans = Removing orphaned packages
 couldnt-find-packages = Couldn't find packages: {$packages} in repos or the AUR
+couldnt-find-file = Counldn't find file at '{$file}'
 searching-repos = Searching repos for {$query}
 searching-aur = Searching AUR for {$query}
 no-results = No results found
@@ -141,6 +142,18 @@ makepkg-failed = makepkg failed
 unknown-error = Unknown error
 package-does-not-exist = Package {$package} does not exist, skipping...
 
+# operations::manifest
+manifest-abort = Manifest generation aborted by user
+failed-to-write-manifest = Failed to write the manifest file to '{$file}'
+failed-to-write-repo = Failed to write repository for '{$repo}'
+failed-to-backup-repo-file = Failed to create a backup of '{$file}'
+failed-to-start-sudo-tee = Failed to start 'sudo tee' for '{$file}'
+failed-to-write-to-sudo-tee = Failed to write repository block for '{$repo}'
+failed-to-wait-for-sudo-tee = Failed to wait for 'sudo tee' for '{$repo}'
+sudo-tee-exited-with-error = 'sudo tee' exited with an error while writing '{$repo}'
+failed-to-enable-service = Failed to enable service '{$service}'
+failed-to-disable-service = Failed to disable service '{$service}'
+
 # internal::error
 non-zero-exit = Exited with non zero code
 build-step-violation = AUR build violated build steps
@@ -188,8 +201,12 @@ sync = Syncs the package databases
 install-packages = The name of the package(s) to install or search for
 install-aur = Operate only on AUR packages
 install-repo = Operate only on repo packages
+install-needed = Do not reinstall up to date packages
 install-search = Search packages for a given pattern instead of installing
 install-by = Searches by a specific field
+manifest = Perform actions on/for epsilon package manifest
+manifest-path = The path to the epsilon manifest
+manifest-out-path = The path where the generated manifest should be outputted
 remove-packages = The name of the package(s) to remove
 query-aur = Lists AUR/foreign packages [-Qa, -Qm]
 query-repo = Lists repo/native packages [-Qr, -Qn]

@@ -22,4 +22,5 @@ pub struct Options {
     pub quiet: bool,
     pub asdeps: bool,
     pub upgrade: bool,
+    pub needed: bool,
 }
