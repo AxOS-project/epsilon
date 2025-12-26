@@ -151,6 +151,8 @@ failed-to-start-sudo-tee = Failed to start 'sudo tee' for '{$file}'
 failed-to-write-to-sudo-tee = Failed to write repository block for '{$repo}'
 failed-to-wait-for-sudo-tee = Failed to wait for 'sudo tee' for '{$repo}'
 sudo-tee-exited-with-error = 'sudo tee' exited with an error while writing '{$repo}'
+failed-to-enable-service = Failed to enable service '{$service}'
+failed-to-disable-service = Failed to disable service '{$service}'
 
 # internal::error
 non-zero-exit = Exited with non zero code

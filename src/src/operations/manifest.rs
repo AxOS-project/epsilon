@@ -77,6 +77,53 @@ fn append_repo_sudo(name: &str, repo_block: &str) {
     }
 }
 
+
+fn enable_service(service: &str) {
+    tracing::info!("Enabling service '{}'", service);
+
+    let status = Command::new("sudo")
+        .arg("systemctl")
+        .arg("enable")
+        .arg(service)
+        .status()
+        .unwrap_or_else(|_| fl_crash!(
+            AppExitCode::Other,
+            "failed-to-enable-service",
+            service = service
+        ));
+
+    if !status.success() {
+        fl_crash!(
+            AppExitCode::Other,
+            "failed-to-enable-service",
+            service = service
+        );
+    }
+}
+
+fn disable_service(service: &str) {
+    tracing::info!("Disabling service '{}'", service);
+
+    let status = Command::new("sudo")
+        .arg("systemctl")
+        .arg("disable")
+        .arg(service)
+        .status()
+        .unwrap_or_else(|_| fl_crash!(
+            AppExitCode::Other,
+            "failed-to-disable-service",
+            service = service
+        ));
+
+    if !status.success() {
+        fl_crash!(
+            AppExitCode::Other,
+            "failed-to-disable-service",
+            service = service
+        );
+    }
+}
+
 #[tracing::instrument(level = "trace")]
 pub async fn interpret_manifest(
     manifest_path: &PathBuf, 
@@ -180,11 +227,11 @@ pub async fn interpret_manifest(
 
     // Handling service enable/disable
     for e_service in config.services.enable {
-        tracing::warn!("TODO: Enable service");
+        enable_service(&e_service);
     }
 
     for d_service in config.services.disable {
-        tracing::warn!("TODO: Disable service");
+        disable_service(&d_service);
     }
 }
 
