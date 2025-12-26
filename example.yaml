@@ -1,0 +1,20 @@
+packages:
+  install:
+    - firefox
+    - vim
+  remove:
+    - nano
+
+packages-aur:
+  install:
+    - shim-signed
+
+repo-add:
+  siglevel: Optional TrustAll
+  server: https://axos-project.com/AxMirrors/$arch
+
+services:
+  enable:
+    - docker
+  disable:
+    - mongod

@@ -2,6 +2,7 @@
 
 use crate::{fl, operations::SearchBy};
 use clap::{ArgAction, Parser, Subcommand, ValueHint};
+use std::path::PathBuf;
 
 static VERSION: &str = concat!(env!("CARGO_PKG_VERSION"),);
 
@@ -50,6 +51,12 @@ pub enum Operation {
 
     #[command(bin_name = "epsi", name = "upgrade", visible_aliases = & ["-Syu"], about = fl!("upgrade"))]
     Upgrade(UpgradeArgs),
+
+    #[command(bin_name = "epsi", name = "manifest", short_flag = 'Z', about = fl!("manifest"))]
+    Manifest {
+        #[command(subcommand)]
+        command: ManifestCommand,
+    },
 
     #[command(bin_name = "epsi", name = "gencomp", short_flag = 'G', about = fl!("gencomp"))]
     GenComp(GenCompArgs),
@@ -155,6 +162,42 @@ pub struct UpgradeArgs {
         help = "Scan for pacnew files after the upgrade and let the user manage them"
     )]
     pub pacnew_after_upgrade: bool,
+}
+
+#[derive(Debug, Clone, Subcommand)]
+pub enum ManifestCommand {
+    Apply(ManifestApplyArgs),
+    Generate(ManifestGenerateArgs),
+}
+
+#[derive(Default, Debug, Clone, Parser)]
+pub struct ManifestApplyArgs {
+    #[arg(required = true, help = fl!("manifest-path"))]
+    pub manifest_path: PathBuf,
+}
+
+#[derive(Default, Debug, Clone, Parser)]
+pub struct ManifestGenerateArgs {
+    #[arg(required = true, help = fl!("manifest-out-path"))]
+    pub out_path: PathBuf,
+
+    #[arg(long, short = 'j', help = "Show a JSON form of the manifest before writing")]
+    pub view_json: bool,
+
+    #[arg(long, short = 'u', help = "Only include packages installed by the user")]
+    pub user_installed: bool,
+
+    #[arg(long, short = 'a', help = "Include AUR Packages in the generated manifest")]
+    pub include_aur: bool,
+
+    #[arg(long, short = 'e', help = "Exclude packages from certain repositories")]
+    pub exclude_repos: Option<Vec<String>>,
+
+    #[arg(long, short = 'S', help = "Enabled services")]
+    pub enabled_services: Option<Vec<String>>,
+
+    #[arg(long, short = 's', help = "Disabled services")]
+    pub disabled_services: Option<Vec<String>>,
 }
 
 #[derive(Default, Debug, Clone, Parser)]

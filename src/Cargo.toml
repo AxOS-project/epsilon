@@ -1,6 +1,6 @@
 [package]
 name = "Epsilon"
-version = "1.3.0"
+version = "1.4.0"
 authors = ["Ardox <ardox@axos-project.com>"]
 description = "A fast and efficient AUR helper"
 keywords = ["aur", "axos", "pacman", "aur-helper"]
@@ -23,8 +23,8 @@ opt-level = 0
 
 [dependencies]
 minus = { version = "5.0.5", features = ["search", "static_output"] }
-alpm = "4.0.0"
-alpm-utils = "4.0.1"
+alpm = "5.0.0"
+alpm-utils = "5.0.0"
 pacmanconf = "3.0.0"
 chrono = { version = "0.4.22", default-features = false, features = [
     "clock",
@@ -42,6 +42,8 @@ serde = { version = "1.0.147", default-features = false, features = [
     "derive",
     "serde_derive",
 ] }
+serde_yaml = "0.9.34"
+serde_json = "1.0.147"
 native-tls = { version = "0.2.10", default-features = false }
 libc = { version = "0.2.137", default-features = false }
 aur-rpc = { version = "0.2.2", default-features = false, features = [
@@ -72,8 +74,7 @@ i18n-embed = { version = "0.13.4", features = [
 i18n-embed-fl = "0.6.4"
 thiserror = "1.0.37"
 rust-embed = "6.4.2"
-serde_yaml = "0.9.34"
-serde_json = "1.0.147"
+
 
 [dependencies.config]
 version = "0.13.2"

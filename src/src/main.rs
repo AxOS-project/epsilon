@@ -5,7 +5,10 @@ use clap::Parser;
 use internal::commands::ShellCommand;
 use internal::{detect, utils};
 
-use crate::args::{InstallArgs, Operation, QueryArgs, RemoveArgs};
+use crate::args::{
+    InstallArgs, Operation, QueryArgs, RemoveArgs, 
+    ManifestCommand
+};
 use crate::error::SilentUnwrap;
 use crate::interact::page_string;
 use crate::internal::config::Config;
@@ -27,6 +30,7 @@ mod interact;
 mod internal;
 mod logging;
 mod operations;
+mod manifest;
 use crate::internal::rpc::rpcinfo;
 use logging::init_logger;
 
@@ -70,6 +74,7 @@ async fn main() {
             fl_info!("system-upgrade");
             operations::upgrade(upgrade_args, options).await;
         }
+        Operation::Manifest { command } => cmd_manifest(&command, &noconfirm).await,
         Operation::Clean => {
             fl_info!("removing-orphans");
             operations::clean(options).await;
@@ -278,6 +283,18 @@ async fn cmd_checkupdates() {
                     pkg.name, pkg.version, remote_package.metadata.version
                 )
             }
+        }
+    }
+}
+
+#[tracing::instrument(level = "trace")]
+async fn cmd_manifest(cmd: &ManifestCommand, noconfirm: &bool) {
+    match cmd {
+        ManifestCommand::Apply(args) => {
+            operations::interpret_manifest(&args.manifest_path).await;
+        }
+        ManifestCommand::Generate(args) => {
+            operations::generate_manifest(&args, noconfirm).await;
         }
     }
 }

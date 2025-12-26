@@ -19,6 +19,7 @@ uninstalling-packages = Uninstalling packages: {$packages}
 system-upgrade = Performing system upgrade
 removing-orphans = Removing orphaned packages
 couldnt-find-packages = Couldn't find packages: {$packages} in repos or the AUR
+couldnt-find-file = Counldn't find file at '{$file}'
 searching-repos = Searching repos for {$query}
 searching-aur = Searching AUR for {$query}
 no-results = No results found
@@ -141,6 +142,10 @@ makepkg-failed = makepkg failed
 unknown-error = Unknown error
 package-does-not-exist = Package {$package} does not exist, skipping...
 
+# operations::manifest
+manifest-abort = Manifest generation aborted by user
+failed-to-write-manifest = Failed to write the manifest file to '{$file}'
+
 # internal::error
 non-zero-exit = Exited with non zero code
 build-step-violation = AUR build violated build steps
@@ -190,6 +195,9 @@ install-aur = Operate only on AUR packages
 install-repo = Operate only on repo packages
 install-search = Search packages for a given pattern instead of installing
 install-by = Searches by a specific field
+manifest = Perform actions on/for epsilon package manifest
+manifest-path = The path to the epsilon manifest
+manifest-out-path = The path where the generated manifest should be outputted
 remove-packages = The name of the package(s) to remove
 query-aur = Lists AUR/foreign packages [-Qa, -Qm]
 query-repo = Lists repo/native packages [-Qr, -Qn]
