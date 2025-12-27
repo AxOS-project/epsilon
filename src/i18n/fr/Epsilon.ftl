@@ -19,6 +19,7 @@ uninstalling-packages = Désinstallation des paquets : {$packages}
 system-upgrade = Mise à niveau du système en cours
 removing-orphans = Suppression des paquets orphelins
 couldnt-find-packages = Impossible de trouver les paquets : {$packages} dans les dépôts ou l’AUR
+couldnt-find-file = Impossible de trouver le fichier : {$file}
 searching-repos = Recherche dans les dépôts pour {$query}
 searching-aur = Recherche dans l’AUR pour {$query}
 no-results = Aucun résultat trouvé
@@ -141,6 +142,18 @@ makepkg-failed = makepkg a échoué
 unknown-error = Erreur inconnue
 package-does-not-exist = Le paquet {$package} n’existe pas, ignoré…
 
+# operations::manifest
+manifest-abort = Abandon de l’opération de manifeste
+failed-to-write-manifest = Échec de l’écriture du manifeste : {$file}
+failed-to-write-repo = Échec de l’écriture du dépôt : {$repo}
+failed-to-backup-repo-file = Échec de la création du fichier de sauvegarde de {$file}
+failed-to-start-sudo-tee = Échec du démarrage de 'sudo tee' pour '{$file}'
+failed-to-write-to-sudo-tee = Échec de l’écriture du bloc de dépôt pour '{$repo}'
+failed-to-wait-for-sudo-tee = Échec de l’attente de 'sudo tee' pour '{$repo}'
+sudo-tee-exited-with-error = 'sudo tee' s’est terminé avec une erreur lors de l’écriture de '{$repo}'
+failed-to-enable-service = Échec de l’activation du service '{$service}'
+failed-to-disable-service = Échec de la désactivation du service '{$service}'
+
 # internal::error
 non-zero-exit = S’est terminé avec un code non nul
 build-step-violation = Construction AUR non conforme aux étapes prévues
@@ -188,8 +201,12 @@ sync = Synchronise les bases de données de paquets
 install-packages = Nom du/des paquet(s) à installer ou rechercher
 install-aur = Opérer uniquement sur les paquets AUR
 install-repo = Opérer uniquement sur les paquets des dépôts
+install-needed = Ne pas réinstaller les paquets à jour
 install-search = Recherche de paquets selon un motif au lieu d’installer
 install-by = Recherche par champ spécifique
+manifest = Effectuer des actions sur/pour le manifeste de paquets epsilon
+manifest-path = Le chemin vers le manifeste epsilon
+manifest-out-path = Le chemin où le manifeste généré doit être enregistré
 remove-packages = Nom du/des paquet(s) à supprimer
 query-aur = Liste les paquets AUR/étrangers [-Qa, -Qm]
 query-repo = Liste les paquets des dépôts [-Qr, -Qn]
