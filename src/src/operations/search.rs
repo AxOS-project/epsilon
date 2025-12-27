@@ -62,7 +62,7 @@ impl PackageSearchResult {
             )
             .append(
                 self.out_of_date
-                    .map(|ood| Local.timestamp(ood.try_into().unwrap(), 0).date_naive())
+                    .map(|ood| Local.timestamp_opt(ood.try_into().unwrap(), 0).unwrap().date_naive())
                     .map(|ood| format!(" [{} {}]", fl!("out-of-date"), ood).bold().red()),
             )
             .append_if(self.installed, || {

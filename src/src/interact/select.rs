@@ -25,7 +25,7 @@ impl AmeFuzzySelect {
         self
     }
 
-    fn build(&mut self) -> dialoguer::FuzzySelect {
+    fn build(&mut self) -> dialoguer::FuzzySelect<'_> {
         let mut select = dialoguer::FuzzySelect::with_theme(AmeTheme::get());
         select
             .with_prompt(mem::take(&mut self.prompt))

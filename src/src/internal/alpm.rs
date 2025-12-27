@@ -72,7 +72,7 @@ impl Alpm {
         Ok(Self(alpm))
     }
 
-    pub fn load(&self, pkg: PackageFrom) -> Result<AlpmPackage, Error> {
+    pub fn load(&self, pkg: PackageFrom) -> Result<AlpmPackage<'_>, Error> {
         match pkg {
             PackageFrom::LocalDb(name) => {
                 let db = self.0.localdb();
@@ -100,7 +100,7 @@ impl Alpm {
         &self.0
     }
 
-    pub fn group_packages(&self, group_name: String) -> Result<Vec<AlpmPackage>, Error> {
+    pub fn group_packages(&self, group_name: String) -> Result<Vec<AlpmPackage<'_>>, Error> {
         let mut packages = Vec::new();
         for db in self.0.syncdbs() {
             if let Ok(group) = db.group(group_name.clone()) {
