@@ -378,7 +378,7 @@ impl PacmanUninstallBuilder {
 
 #[derive(Default, Debug, Clone)]
 pub struct PacmanDatabasesSyncBuilder {
-    no_confirm: bool,
+    _no_confirm: bool,
 }
 
 impl PacmanDatabasesSyncBuilder {
