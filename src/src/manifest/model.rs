@@ -41,9 +41,9 @@ pub struct ServiceActions {
 }
 
 impl Manifest {
-    pub fn from_json_str(s: &str) -> Result<Self, Box<dyn Error>> {
-        Ok(serde_json::from_str(s)?)
-    }
+    // pub fn from_json_str(s: &str) -> Result<Self, Box<dyn Error>> {
+    //     Ok(serde_json::from_str(s)?)
+    // }
 
     pub fn from_yaml_str(s: &str) -> Result<Self, Box<dyn Error>> {
         Ok(serde_yaml::from_str(s)?)
