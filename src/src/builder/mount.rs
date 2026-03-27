@@ -8,7 +8,8 @@ pub struct ChrootMounts {
 impl Drop for ChrootMounts {
     fn drop(&mut self) {
         for mount_point in &self.mounts {
-            let _ = Command::new("umount")
+            let _ = Command::new("sudo")
+                .arg("umount")
                 .arg("--lazy")
                 .arg(mount_point)
                 .status();
@@ -28,7 +29,8 @@ impl ChrootMounts {
         fstype: Option<&str>,
         args: &[&str],
     ) -> std::io::Result<()> {
-        let mut cmd = Command::new("mount");
+        let mut cmd = Command::new("sudo");
+        cmd.arg("mount");
 
         if let Some(fstype) = fstype {
             cmd.arg("-t").arg(fstype);
