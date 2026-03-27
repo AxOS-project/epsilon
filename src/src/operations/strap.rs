@@ -40,7 +40,8 @@ pub async fn strap(args: StrapArgs) {
     ];
     pacman_args.extend(pkgs);
 
-    let install_result = Command::new("unshare")
+    let install_result = Command::new("sudo")
+        .arg("unshare")
         .args(["--fork", "--pid"])
         .arg("pacman")
         .arg("-r")
