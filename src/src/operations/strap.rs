@@ -61,7 +61,6 @@ pub async fn strap(args: StrapArgs) {
             &mount_pnt.join("etc/pacman.d/"),
             true,
             true,
-            false,
         ).silent_unwrap(AppExitCode::Other);
     }
 
@@ -72,7 +71,6 @@ pub async fn strap(args: StrapArgs) {
             &mount_pnt.join("etc/pacman.conf"),
             true,
             true,
-            false,
         ).silent_unwrap(AppExitCode::Other);
     }
 }
@@ -119,7 +117,6 @@ async fn initialize_keyring(root: &Path, init_keyring: bool, avoid_keyring_copy:
                 &gnupg_path,
                 true,
                 false,
-                true,
             );
 
             if let Err(_) = result {
@@ -204,16 +201,12 @@ async fn setup_chroot<P: AsRef<Path>>(root: P) -> std::io::Result<()> {
 
 fn copy_path(
     src: &Path, dst: &Path, 
-    sudo: bool, preserve_ownership: bool, recursive: bool
+    sudo: bool, preserve_ownership: bool
 ) -> AppResult<()> {
     let mut args: Vec<&str> = vec!["-a"];
 
     if !preserve_ownership {
         args.push("--no-preserve=ownership");
-    }
-
-    if !recursive {
-        args.push("--no-recursive");
     }
 
     let mut command = Command::new(if sudo { "sudo" } else { "cp" });
