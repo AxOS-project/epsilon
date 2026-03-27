@@ -26,6 +26,7 @@ pub async fn strap(args: StrapArgs) {
         );
     }
 
+    tracing::info!("Initializing pacman keyrings");
     initialize_keyring(&mount_pnt, args.init_keyring, args.avoid_keyring_copy).await;
 
     // Install packages
@@ -58,6 +59,7 @@ pub async fn strap(args: StrapArgs) {
             Path::new("/etc/pacman.d/mirrorlist"),
             &mount_pnt.join("etc/pacman.d/"),
             true,
+            true,
             false,
         ).silent_unwrap(AppExitCode::Other);
     }
@@ -67,6 +69,7 @@ pub async fn strap(args: StrapArgs) {
         copy_path(
             Path::new("/etc/pacman.conf"),
             &mount_pnt.join("etc/pacman.conf"),
+            true,
             true,
             false,
         ).silent_unwrap(AppExitCode::Other);
@@ -113,6 +116,7 @@ async fn initialize_keyring(root: &Path, init_keyring: bool, avoid_keyring_copy:
             let result = copy_path(
                 host_gnupg_path,
                 &gnupg_path,
+                true,
                 false,
                 true,
             );
@@ -197,7 +201,10 @@ async fn setup_chroot<P: AsRef<Path>>(root: P) -> std::io::Result<()> {
     Ok(())
 }
 
-fn copy_path(src: &Path, dst: &Path, preserve_ownership: bool, recursive: bool) -> AppResult<()> {
+fn copy_path(
+    src: &Path, dst: &Path, 
+    sudo: bool, preserve_ownership: bool, recursive: bool
+) -> AppResult<()> {
     let mut args: Vec<&str> = vec!["-a"];
 
     if !preserve_ownership {
@@ -208,7 +215,13 @@ fn copy_path(src: &Path, dst: &Path, preserve_ownership: bool, recursive: bool) 
         args.push("--no-recursive");
     }
 
-    let status = Command::new("cp")
+    let mut command = Command::new(if sudo { "sudo" } else { "cp" });
+
+    if sudo {
+        command.arg("cp");
+    }
+
+    let status = command
         .args(&args)
         .arg(src)
         .arg(dst)
