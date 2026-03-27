@@ -7,6 +7,7 @@ pub enum AppExitCode {
     UserCancellation = 4,
     PacmanError = 5,
     MakePkgError = 7,
+    MountError = 8,
     RpcError = 9,
     Other = 63,
 }

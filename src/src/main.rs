@@ -75,6 +75,10 @@ async fn main() {
             fl_info!("system-upgrade");
             operations::upgrade(upgrade_args, options).await;
         }
+        Operation::Strap(strap_args) => {
+            fl_info!("performing-strap");
+            operations::strap(strap_args).await;
+        }
         Operation::Manifest { command } => cmd_manifest(&command, &noconfirm, &quiet).await,
         Operation::Clean => {
             fl_info!("removing-orphans");
