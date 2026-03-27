@@ -18,6 +18,7 @@ pub async fn strap(args: StrapArgs) {
     create_dirs(&mount_pnt).await.silent_unwrap(AppExitCode::FailedCreatingPaths);
 
     // Mount API filesystems
+    tracing::info!("Setting up chroot");
     if let Err(_) = setup_chroot(&mount_pnt).await {
         fl_crash!(AppExitCode::MountError, "failed-mount");
     }
