@@ -57,7 +57,7 @@ failed-remove-pkgs = Failed to remove packages
 # operations::strap
 keyring-failed = Failed to setup pacman keyring
 keyring-copy-failed = Failed to copy pacman keyring
-failed-mount = Failed to mount directories
+failed-mount = Failed to mount directories, {$error}
 failed-pkg-install = Failed to install packages
 
 # operations::sync

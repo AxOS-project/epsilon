@@ -19,8 +19,12 @@ pub async fn strap(args: StrapArgs) {
 
     // Mount API filesystems
     tracing::info!("Setting up chroot");
-    if let Err(_) = setup_chroot(&mount_pnt).await {
-        fl_crash!(AppExitCode::MountError, "failed-mount");
+    if let Err(e) = setup_chroot(&mount_pnt).await {
+        fl_crash!(
+            AppExitCode::MountError,
+            "failed-mount",
+            error = e.to_string()
+        );
     }
 
     initialize_keyring(&mount_pnt, args.init_keyring, args.avoid_keyring_copy).await;
