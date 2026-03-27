@@ -19,6 +19,7 @@ pub async fn strap(args: StrapArgs) {
 
     // Mount API filesystems
     tracing::info!("Setting up chroot");
+    crate::internal::prompt_sudo_single().await.silent_unwrap(AppExitCode::Other);
     if let Err(e) = setup_chroot(&mount_pnt).await {
         fl_crash!(
             AppExitCode::MountError,
