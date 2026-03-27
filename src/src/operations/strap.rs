@@ -6,7 +6,6 @@ use crate::error::{AppResult, AppError};
 use std::os::unix::fs::DirBuilderExt;
 use std::process::Command;
 use std::path::Path;
-use nix::mount::MsFlags;
 
 #[tracing::instrument(level = "trace")]
 pub async fn strap(args: StrapArgs) {
@@ -19,7 +18,6 @@ pub async fn strap(args: StrapArgs) {
 
     // Mount API filesystems
     tracing::info!("Setting up chroot");
-    crate::internal::prompt_sudo_single().await.silent_unwrap(AppExitCode::Other);
     if let Err(e) = setup_chroot(&mount_pnt).await {
         fl_crash!(
             AppExitCode::MountError,
@@ -126,86 +124,74 @@ async fn initialize_keyring(root: &Path, init_keyring: bool, avoid_keyring_copy:
     }
 }
 
-async fn setup_chroot<P: AsRef<Path>>(root: P) -> nix::Result<()> {
+async fn setup_chroot<P: AsRef<Path>>(root: P) -> std::io::Result<()> {
     let root = root.as_ref();
     let mut chroot_mounts = ChrootMounts::new();
 
+    // proc
     chroot_mounts.add_mount(
         Some("proc"),
         root.join("proc"),
         Some("proc"),
-        MsFlags::MS_NOSUID | MsFlags::MS_NOEXEC | MsFlags::MS_NODEV,
-        None,
+        &["-o", "nosuid,noexec,nodev"],
     )?;
 
+    // sysfs
     chroot_mounts.add_mount(
         Some("sys"),
         root.join("sys"),
         Some("sysfs"),
-        MsFlags::MS_NOSUID
-            | MsFlags::MS_NOEXEC
-            | MsFlags::MS_NODEV
-            | MsFlags::MS_RDONLY,
-        None,
+        &["-o", "nosuid,noexec,nodev,ro"],
     )?;
 
+    // efivarfs if available
     let efivars = root.join("sys/firmware/efi/efivars");
-    let _ = chroot_mounts.maybe_add_mount(
+    chroot_mounts.maybe_add_mount(
         efivars.exists(),
         Some("efivarfs"),
         &efivars,
         Some("efivarfs"),
-        MsFlags::MS_NOSUID | MsFlags::MS_NOEXEC | MsFlags::MS_NODEV,
-        None,
-    );
+        &["-o", "nosuid,noexec,nodev"],
+    )?;
 
+    // udev
     chroot_mounts.add_mount(
         Some("udev"),
         root.join("dev"),
         Some("devtmpfs"),
-        MsFlags::MS_NOSUID,
-        Some("mode=0755"),
+        &["-o", "mode=0755,nosuid"],
     )?;
 
+    // devpts
     chroot_mounts.add_mount(
         Some("devpts"),
         root.join("dev/pts"),
         Some("devpts"),
-        MsFlags::MS_NOSUID | MsFlags::MS_NOEXEC,
-        Some("mode=0620,gid=5"),
+        &["-o", "mode=0620,gid=5,nosuid,noexec"],
     )?;
 
+    // shm
     chroot_mounts.add_mount(
         Some("shm"),
         root.join("dev/shm"),
         Some("tmpfs"),
-        MsFlags::MS_NOSUID | MsFlags::MS_NODEV,
-        Some("mode=1777"),
+        &["-o", "mode=1777,nosuid,nodev"],
     )?;
 
-    // bind mount /run
+    // /run bind + private
     chroot_mounts.add_mount(
         Some("/run"),
         root.join("run"),
         None,
-        MsFlags::MS_BIND,
-        None,
+        &["--bind", "--make-private"],
     )?;
 
-    chroot_mounts.add_mount(
-        None::<&str>,
-        &root.join("run"),
-        None::<&str>,
-        MsFlags::MS_PRIVATE,
-        None::<&str>,
-    )?;
-
+    // tmp
     chroot_mounts.add_mount(
         Some("tmp"),
         root.join("tmp"),
         Some("tmpfs"),
-        MsFlags::MS_NOSUID | MsFlags::MS_NODEV,
-        Some("mode=1777,strictatime"),
+        &["-o", "mode=1777,strictatime,nodev,nosuid"],
     )?;
 
     Ok(())

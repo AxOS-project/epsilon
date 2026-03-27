@@ -26,7 +26,6 @@ minus = { version = "5.0.5", features = ["search", "static_output"] }
 alpm = "5.0.0"
 alpm-utils = "5.0.0"
 pacmanconf = "3.0.0"
-nix = { version = "0.31.2", features = ["mount"] }
 chrono = { version = "0.4.22", default-features = false, features = [
     "clock",
     "std",
