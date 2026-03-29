@@ -36,7 +36,6 @@ pub async fn strap(args: StrapArgs) {
         "-Sy".to_string(),
         "--config".to_string(),
         "/etc/pacman.conf".to_string(),
-        format!("--cachedir={}/var/cache/pacman/pkg", mount_pnt.display()),
         "--noconfirm".to_string(),
     ];
     pacman_args.extend(pkgs);
