@@ -5,4 +5,3 @@ pub mod pacdiff;
 pub mod pacman;
 pub mod pager;
 pub mod rm;
-pub mod mount;

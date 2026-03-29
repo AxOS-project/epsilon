@@ -1,7 +1,7 @@
 use crate::{fl_crash, AppExitCode};
 use crate::args::StrapArgs;
 use crate::error::SilentUnwrap;
-use crate::builder::mount::ChrootMounts;
+use crate::internal::mount::ChrootMounts;
 use crate::error::{AppResult, AppError};
 use std::os::unix::fs::DirBuilderExt;
 use std::process::Command;
