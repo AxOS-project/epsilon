@@ -5,6 +5,7 @@ use crate::builder::mount::ChrootMounts;
 use crate::error::{AppResult, AppError};
 use std::os::unix::fs::DirBuilderExt;
 use std::process::Command;
+use nix::mount::MsFlags;
 use std::path::Path;
 
 #[tracing::instrument(level = "trace")]
@@ -40,8 +41,7 @@ pub async fn strap(args: StrapArgs) {
     ];
     pacman_args.extend(pkgs);
 
-    let install_result = Command::new("sudo")
-        .arg("unshare")
+    let install_result = Command::new("unshare")
         .args(["--fork", "--pid"])
         .arg("pacman")
         .arg("-r")
@@ -60,7 +60,6 @@ pub async fn strap(args: StrapArgs) {
             Path::new("/etc/pacman.d/mirrorlist"),
             &mount_pnt.join("etc/pacman.d/"),
             true,
-            true,
         ).silent_unwrap(AppExitCode::Other);
     }
 
@@ -69,7 +68,6 @@ pub async fn strap(args: StrapArgs) {
         copy_path(
             Path::new("/etc/pacman.conf"),
             &mount_pnt.join("etc/pacman.conf"),
-            true,
             true,
         ).silent_unwrap(AppExitCode::Other);
     }
@@ -101,8 +99,8 @@ async fn initialize_keyring(root: &Path, init_keyring: bool, avoid_keyring_copy:
 
     if !gnupg_path.is_dir() {
         if init_keyring {
-            let result = Command::new("sudo")
-                .args(["pacman-key", "--gpgdir"])
+            let result = Command::new("pacman-key")
+                .arg("--gpgdir")
                 .arg(&gnupg_path)
                 .arg("--init")
                 .status()
@@ -115,7 +113,6 @@ async fn initialize_keyring(root: &Path, init_keyring: bool, avoid_keyring_copy:
             let result = copy_path(
                 host_gnupg_path,
                 &gnupg_path,
-                true,
                 false,
             );
 
@@ -126,74 +123,93 @@ async fn initialize_keyring(root: &Path, init_keyring: bool, avoid_keyring_copy:
     }
 }
 
-async fn setup_chroot<P: AsRef<Path>>(root: P) -> std::io::Result<()> {
+async fn setup_chroot<P: AsRef<Path>>(root: P) -> nix::Result<()> {
     let root = root.as_ref();
     let mut chroot_mounts = ChrootMounts::new();
 
-    // proc
+    tracing::debug!("Mounting proc");
     chroot_mounts.add_mount(
         Some("proc"),
         root.join("proc"),
         Some("proc"),
-        &["-o", "nosuid,noexec,nodev"],
+        MsFlags::MS_NOSUID | MsFlags::MS_NOEXEC | MsFlags::MS_NODEV,
+        None,
     )?;
 
-    // sysfs
+    tracing::debug!("Mounting sys");
     chroot_mounts.add_mount(
         Some("sys"),
         root.join("sys"),
         Some("sysfs"),
-        &["-o", "nosuid,noexec,nodev,ro"],
+        MsFlags::MS_NOSUID
+            | MsFlags::MS_NOEXEC
+            | MsFlags::MS_NODEV
+            | MsFlags::MS_RDONLY,
+        None,
     )?;
 
-    // efivarfs if available
+    tracing::debug!("Mounting efivars");
     let efivars = root.join("sys/firmware/efi/efivars");
-    chroot_mounts.maybe_add_mount(
+    let _ = chroot_mounts.maybe_add_mount(
         efivars.exists(),
         Some("efivarfs"),
         &efivars,
         Some("efivarfs"),
-        &["-o", "nosuid,noexec,nodev"],
-    )?;
+        MsFlags::MS_NOSUID | MsFlags::MS_NOEXEC | MsFlags::MS_NODEV,
+        None,
+    );
 
-    // udev
+    tracing::debug!("Mounting udev");
     chroot_mounts.add_mount(
         Some("udev"),
         root.join("dev"),
         Some("devtmpfs"),
-        &["-o", "mode=0755,nosuid"],
+        MsFlags::MS_NOSUID,
+        Some("mode=0755"),
     )?;
 
-    // devpts
+    tracing::debug!("Mounting devpts");
     chroot_mounts.add_mount(
         Some("devpts"),
         root.join("dev/pts"),
         Some("devpts"),
-        &["-o", "mode=0620,gid=5,nosuid,noexec"],
+        MsFlags::MS_NOSUID | MsFlags::MS_NOEXEC,
+        Some("mode=0620,gid=5"),
     )?;
 
-    // shm
+    tracing::debug!("Mounting shm");
     chroot_mounts.add_mount(
         Some("shm"),
         root.join("dev/shm"),
         Some("tmpfs"),
-        &["-o", "mode=1777,nosuid,nodev"],
+        MsFlags::MS_NOSUID | MsFlags::MS_NODEV,
+        Some("mode=1777"),
     )?;
 
-    // /run bind + private
+    tracing::debug!("Mounting run");
     chroot_mounts.add_mount(
         Some("/run"),
         root.join("run"),
         None,
-        &["--bind", "--make-private"],
+        MsFlags::MS_BIND,
+        None,
     )?;
 
-    // tmp
+    chroot_mounts.add_mount(
+        None::<&str>,
+        &root.join("run"),
+        None::<&str>,
+        MsFlags::MS_PRIVATE,
+        None::<&str>,
+    )?;
+
+    tracing::debug!("Mounting tmp");
     chroot_mounts.add_mount(
         Some("tmp"),
         root.join("tmp"),
         Some("tmpfs"),
-        &["-o", "mode=1777,strictatime,nodev,nosuid"],
+        MsFlags::MS_NOSUID | MsFlags::MS_NODEV | MsFlags::MS_STRICTATIME,
+        Some("mode=1777"),
     )?;
 
     Ok(())
@@ -201,7 +217,7 @@ async fn setup_chroot<P: AsRef<Path>>(root: P) -> std::io::Result<()> {
 
 fn copy_path(
     src: &Path, dst: &Path, 
-    sudo: bool, preserve_ownership: bool
+    preserve_ownership: bool
 ) -> AppResult<()> {
     let mut args: Vec<&str> = vec!["-a"];
 
@@ -209,13 +225,7 @@ fn copy_path(
         args.push("--no-preserve=ownership");
     }
 
-    let mut command = Command::new(if sudo { "sudo" } else { "cp" });
-
-    if sudo {
-        command.arg("cp");
-    }
-
-    let status = command
+    let status = Command::new("cp")
         .args(&args)
         .arg(src)
         .arg(dst)

@@ -1,5 +1,5 @@
+use nix::mount::{mount, umount2, MntFlags, MsFlags};
 use std::path::{Path, PathBuf};
-use std::process::Command;
 
 pub struct ChrootMounts {
     mounts: Vec<PathBuf>,
@@ -8,11 +8,7 @@ pub struct ChrootMounts {
 impl Drop for ChrootMounts {
     fn drop(&mut self) {
         for mount_point in &self.mounts {
-            let _ = Command::new("sudo")
-                .arg("umount")
-                .arg("--lazy")
-                .arg(mount_point)
-                .status();
+            let _ = umount2(mount_point, MntFlags::MNT_DETACH);
         }
     }
 }
@@ -27,34 +23,20 @@ impl ChrootMounts {
         source: Option<&str>,
         target: P,
         fstype: Option<&str>,
-        args: &[&str],
-    ) -> std::io::Result<()> {
-        let mut cmd = Command::new("sudo");
-        cmd.arg("mount");
+        flags: MsFlags,
+        data: Option<&str>,
+    ) -> nix::Result<()> {
+        let target_path = target.as_ref();
 
-        if let Some(fstype) = fstype {
-            cmd.arg("-t").arg(fstype);
-        }
+        mount(
+            source,
+            target_path,
+            fstype,
+            flags,
+            data,
+        )?;
 
-        if let Some(source) = source {
-            cmd.arg(source);
-        }
-
-        cmd.arg(target.as_ref());
-
-        for arg in args {
-            cmd.arg(arg);
-        }
-
-        let status = cmd.status()?;
-        if !status.success() {
-            return Err(std::io::Error::new(
-                std::io::ErrorKind::Other,
-                format!("mount failed: {:?}", status),
-            ));
-        }
-
-        self.mounts.insert(0, target.as_ref().to_path_buf());
+        self.mounts.insert(0, target_path.to_path_buf());
         Ok(())
     }
 
@@ -64,10 +46,11 @@ impl ChrootMounts {
         source: Option<&str>,
         target: P,
         fstype: Option<&str>,
-        args: &[&str],
-    ) -> std::io::Result<()> {
+        flags: MsFlags,
+        data: Option<&str>,
+    ) -> nix::Result<()> {
         if cond {
-            self.add_mount(source, target, fstype, args)?;
+            self.add_mount(source, target, fstype, flags, data)?;
         }
         Ok(())
     }
