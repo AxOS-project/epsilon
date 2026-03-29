@@ -37,7 +37,7 @@ use logging::init_logger;
 #[tokio::main]
 async fn main() {
     color_eyre::install().unwrap();
-    if utils::is_run_with_root() {
+    if utils::is_run_with_root() && std::env::var("EPSILON_SUDO_ACCESS").is_err() {
         fl_crash!(AppExitCode::RunAsRoot, "run-as-root");
     }
 
@@ -74,6 +74,13 @@ async fn main() {
         Operation::Upgrade(upgrade_args) => {
             fl_info!("system-upgrade");
             operations::upgrade(upgrade_args, options).await;
+        }
+        Operation::Strap(strap_args) => {
+            std::env::set_var("EPSILON_SUDO_ACCESS", "1");
+            utils::escalate_with_args(&[], true);
+                
+            fl_info!("performing-strap");
+            operations::strap(strap_args).await;
         }
         Operation::Manifest { command } => cmd_manifest(&command, &noconfirm, &quiet).await,
         Operation::Clean => {

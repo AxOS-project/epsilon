@@ -52,6 +52,9 @@ pub enum Operation {
     #[command(bin_name = "epsi", name = "upgrade", visible_aliases = & ["-Syu"], about = fl!("upgrade"))]
     Upgrade(UpgradeArgs),
 
+    #[command(bin_name = "epsi", name = "strap", about = fl!("strap"))]
+    Strap(StrapArgs),
+
     #[command(bin_name = "epsi", name = "manifest", short_flag = 'Z', about = fl!("manifest"))]
     Manifest {
         #[command(subcommand)]
@@ -165,6 +168,29 @@ pub struct UpgradeArgs {
         help = "Scan for pacnew files after the upgrade and let the user manage them"
     )]
     pub pacnew_after_upgrade: bool,
+}
+
+#[derive(Default, Debug, Clone, Parser)]
+pub struct StrapArgs {
+    // Required
+    #[arg(required = true)]
+    pub mount: PathBuf,
+
+    #[arg(required = true)]
+    pub packages: Vec<String>,
+
+    // Optional
+    #[arg(long, short = 'G', help = "Avoid copying the host's pacman keyring to the target")]
+    pub avoid_keyring_copy: bool,
+
+    #[arg(long, short = 'K', help = "Initialize an empty pacman keyring in the target (implies '-G')")]
+    pub init_keyring: bool,
+
+    #[arg(long, short = 'M', help = "Avoid copying the host's mirrorlist to the target")]
+    pub avoid_mirrorlist: bool,
+
+    #[arg(long, short = 'P', help = "Copy the host's pacman config to the target")]
+    pub copy_conf: bool,
 }
 
 #[derive(Debug, Clone, Subcommand)]

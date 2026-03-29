@@ -4,6 +4,7 @@ pub use install::*;
 pub use search::{aur_search, repo_search as search, SearchBy};
 pub use uninstall::*;
 pub use upgrade::*;
+pub use strap::*;
 pub use sync::*;
 pub use manifest::*;
 
@@ -14,4 +15,5 @@ mod search;
 mod uninstall;
 mod upgrade;
 mod manifest;
+mod strap;
 mod sync;

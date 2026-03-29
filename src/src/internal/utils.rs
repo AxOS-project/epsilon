@@ -98,3 +98,30 @@ pub fn is_run_with_root() -> bool {
     let uid = unsafe { libc::geteuid() };
     uid == 0
 }
+
+pub fn escalate_with_args(extra_args: &[&str], preserve_env: bool) {
+    if is_run_with_root() {
+        return;
+    }
+
+    let exe = std::env::current_exe().expect("Failed to get current exe path");
+    let mut args: Vec<String> = std::env::args().collect();
+    args[0] = exe.to_string_lossy().to_string();
+
+    for arg in extra_args {
+        args.push(arg.to_string());
+    }
+
+    let mut cmd = std::process::Command::new("sudo");
+
+    if preserve_env {
+        cmd.arg("-E");
+    }
+
+    let status = cmd
+        .args(&args)
+        .status()
+        .expect("Failed to execute sudo");
+
+    std::process::exit(status.code().unwrap_or(1));
+}

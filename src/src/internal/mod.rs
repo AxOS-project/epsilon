@@ -16,6 +16,7 @@ pub mod structs;
 pub mod utils;
 pub mod alpm;
 pub mod i18n;
+pub mod mount;
 mod sudoloop;
 
 #[macro_export]

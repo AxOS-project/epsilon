@@ -17,6 +17,7 @@ aur-warning =
 are-you-sure = Are you sure that you want to continue?
 uninstalling-packages = Uninstalling packages: {$packages}
 system-upgrade = Performing system upgrade
+performing-strap = Bootstrapping packages
 removing-orphans = Removing orphaned packages
 couldnt-find-packages = Couldn't find packages: {$packages} in repos or the AUR
 couldnt-find-file = Counldn't find file at '{$file}'
@@ -52,6 +53,12 @@ installed = installed
 
 # operations::uninstall
 failed-remove-pkgs = Failed to remove packages
+
+# operations::strap
+keyring-failed = Failed to setup pacman keyring
+keyring-copy-failed = Failed to copy pacman keyring
+failed-mount = Failed to mount directories, {$error}
+failed-pkg-install = Failed to install packages
 
 # operations::sync
 syncing-databases = Syncing databases
@@ -193,6 +200,7 @@ remove = Removes a previously installed package
 search = Searches for packages matching a provided pattern in the AUR/repos [aliases: -Ss]
 query = Queries installed packages
 upgrade = Upgrades locally installed packages to their latest versions (Default)
+strap = Install the base system and other packages into a new root directory
 gencomp = Generates shell completions for supported shells (bash, fish, elvish, pwsh)
 clean = Removes all orphaned packages
 checkupdates = Queries for and returns available package updates
