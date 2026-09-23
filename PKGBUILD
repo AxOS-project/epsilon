@@ -5,7 +5,7 @@ pkgdesc="AxOS pacman wrapper and AUR helper"
 arch=('x86_64')
 license=('GPL')
 makedepends=('cargo' 'rust' 'clang' 'lld')
-depends=('pacdiff-pacman-hook-git' 'timeshift')
+depends=('timeshift')
 # sha256sums=('SKIP')
 
 build() {
