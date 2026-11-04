@@ -1,4 +1,4 @@
-use aur_rpc::PackageInfo;
+use crate::internal::rpc::PackageInfo;
 use futures::future;
 
 use crate::{

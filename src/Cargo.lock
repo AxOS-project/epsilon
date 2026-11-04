@@ -8,7 +8,6 @@ version = "1.5.0"
 dependencies = [
  "alpm",
  "alpm-utils",
- "aur-rpc",
  "cargo_toml",
  "chrono",
  "clap",
@@ -35,6 +34,7 @@ dependencies = [
  "pacmanconf",
  "parking_lot",
  "regex",
+ "reqwest",
  "rust-embed",
  "serde",
  "serde_json",
@@ -193,18 +193,6 @@ dependencies = [
  "proc-macro2",
  "quote",
  "syn 2.0.104",
-]
-
-[[package]]
-name = "aur-rpc"
-version = "0.2.2"
-source = "registry+https://github.com/rust-lang/crates.io-index"
-checksum = "32ff81f095f3696d50d6c9835732d207ed301645f87beaa52ae79f0f833f47d8"
-dependencies = [
- "reqwest",
- "serde",
- "thiserror 1.0.69",
- "tracing",
 ]
 
 [[package]]

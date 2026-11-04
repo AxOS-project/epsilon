@@ -1,4 +1,4 @@
-use aur_rpc::PackageInfo;
+use crate::internal::rpc::PackageInfo;
 
 use std::path::{Path, PathBuf};
 

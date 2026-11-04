@@ -1,6 +1,6 @@
 use std::collections::HashSet;
 
-use aur_rpc::PackageInfo;
+use crate::internal::rpc::PackageInfo;
 use futures::future;
 
 use crate::builder::pacman::{PacmanQueryBuilder, PacmanSearchBuilder};
@@ -86,7 +86,7 @@ impl DependencyInformation {
             already_searched.extend(pkgs_to_resolve.iter().cloned());
             Self::extend_by_repo_packages(&mut pkgs_to_resolve, &mut dependencies).await?;
 
-            let mut aur_packages = aur_rpc::info(&pkgs_to_resolve).await.map_err(|_| {
+            let mut aur_packages = crate::internal::rpc::info(&pkgs_to_resolve).await.map_err(|_| {
                 AppError::MissingDependencies(pkgs_to_resolve.iter().cloned().collect())
             })?;
             aur_packages.iter().for_each(|p| {
@@ -123,7 +123,7 @@ impl DependencyInformation {
             already_searched.extend(packages_to_resolve.iter().cloned());
             Self::extend_by_repo_packages(&mut packages_to_resolve, &mut dependencies).await?;
 
-            let mut aur_packages = aur_rpc::info(&packages_to_resolve).await.map_err(|_| {
+            let mut aur_packages = crate::internal::rpc::info(&packages_to_resolve).await.map_err(|_| {
                 AppError::MissingDependencies(packages_to_resolve.iter().cloned().collect())
             })?;
             aur_packages.iter().for_each(|p| {
@@ -161,7 +161,7 @@ impl DependencyInformation {
             already_searched.extend(packages_to_resolve.iter().cloned());
             Self::extend_by_repo_packages(&mut packages_to_resolve, &mut dependencies).await?;
 
-            let mut aur_packages = aur_rpc::info(&packages_to_resolve).await?;
+            let mut aur_packages = crate::internal::rpc::info(&packages_to_resolve).await?;
             aur_packages.iter().for_each(|p| {
                 packages_to_resolve.remove(&p.metadata.name);
             });

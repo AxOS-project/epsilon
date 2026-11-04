@@ -4,7 +4,7 @@ use std::{
     sync::Arc,
 };
 
-use aur_rpc::PackageInfo;
+use crate::internal::rpc::PackageInfo;
 use crossterm::style::Stylize;
 use futures::future;
 use indicatif::ProgressBar;

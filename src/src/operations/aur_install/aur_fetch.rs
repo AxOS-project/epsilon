@@ -21,7 +21,7 @@ impl AurFetch {
     pub async fn fetch_package_info(self) -> AppResult<AurDownload> {
         let pb = spinner!("{}", fl!("fetching-pkg-info"));
 
-        let package_infos = aur_rpc::info(&self.packages).await?;
+        let package_infos = crate::internal::rpc::info(&self.packages).await?;
 
         tracing::debug!("package info = {package_infos:?}");
 

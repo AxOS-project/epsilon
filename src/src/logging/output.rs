@@ -1,6 +1,6 @@
 use std::collections::{HashMap, HashSet};
 
-use aur_rpc::PackageInfo;
+use crate::internal::rpc::PackageInfo;
 use console::Alignment;
 use crossterm::style::Stylize;
 

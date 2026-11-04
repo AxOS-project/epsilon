@@ -13,7 +13,7 @@ pub enum AppError {
     Io(#[from] std::io::Error),
 
     #[error("AUR RPC call failed {0}")]
-    Rpc(#[from] aur_rpc::error::RPCError),
+    Rpc(#[from] crate::internal::rpc::RPCError),
 
     #[error("{}", fl!("build-step-violation"))]
     BuildStepViolation,

@@ -47,8 +47,9 @@ serde_yaml = "0.9.34"
 serde_json = "1.0.147"
 native-tls = { version = "0.2.10", default-features = false }
 libc = { version = "0.2.137", default-features = false }
-aur-rpc = { version = "0.2.2", default-features = false, features = [
+reqwest = { version = "0.11.27", default-features = false, features = [
     "rustls-tls",
+    "json",
 ] }
 futures = "0.3.25"
 tracing = "0.1.37"

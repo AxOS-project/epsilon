@@ -13,7 +13,7 @@ use crate::logging::fmt_builder::FmtOptions;
 use crate::logging::Printable;
 use crate::Options;
 
-use aur_rpc::SearchField;
+use crate::internal::rpc::SearchField;
 use chrono::Local;
 use chrono::TimeZone;
 use colored::Colorize;
